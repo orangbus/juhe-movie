@@ -1,8 +1,9 @@
-import axios from "axios";
+import axios from "./request.js";
 
-const app_debug = process.env.VUE_APP_DEBUG;
+// const app_debug = process.env.VUE_APP_DEBUG;
 
 function baseUrl(url) {
+	return "/api/" + url;
 	if (app_debug){
 		return "/api/" + url;
 	}else{

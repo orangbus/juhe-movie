@@ -1,4 +1,15 @@
 const EnumData = {
+	appName: "西安石油大学虚拟仿真实验",
+	tokenLabel: "token",
+	refreshTokenLabel: "refresh_token",
+	userLabel: "user",
+	authorizationLabel: "authorization",
+	websiteLabel: "website",
+
+	movieApiLabel: "movie_api",
+	movieApiListLabel:"movie_api_list",
+
+
 	movieGrid:{
 		xl: 2, // 4K 和超宽屏幕
 		lg: 2, // 桌面端

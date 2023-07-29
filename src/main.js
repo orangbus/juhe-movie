@@ -1,7 +1,7 @@
 import "./api/request.js";
 
 import { createApp } from 'vue'
-// import './style.css'
+import './style.scss'
 import App from './App.vue'
 
 
@@ -9,17 +9,24 @@ import App from './App.vue'
 import router from "./router/index.js";
 
 // 状态管理
+import {createPinia} from "pinia";
 
 // 消息弹窗
-
 
 // Vuetify
 import 'vuetify/styles'
 // 加载图标样式
 import "@mdi/font/css/materialdesignicons.css"
 import vuetify from './plugins/vuetify'
+import {useWebsiteStore} from "./store/index.js";
 
-createApp(App)
-		.use(router)
-		.use(vuetify)
-		.mount('#app')
+const app = createApp(App);
+
+app.use(router)
+.use(vuetify)
+.use(createPinia())
+
+const website = useWebsiteStore()
+website.loadWebsite();
+
+app.mount('#app')

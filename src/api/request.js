@@ -13,7 +13,7 @@ axios.interceptors.request.use((config)=>{
 })
 
 axios.interceptors.response.use((response)=>{
-	const status = response.data.status;
+	const status = response.data.code;
 	switch (status){
 		case 200:
 		case 202:
@@ -27,3 +27,5 @@ axios.interceptors.response.use((response)=>{
 },(error)=>{
 	return Promise.reject(error);
 })
+
+export default axios;

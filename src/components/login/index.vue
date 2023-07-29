@@ -1,6 +1,6 @@
 <script setup>
 import {ref} from "vue";
-import EnumData from "../../Utils/EnumData.js";
+import EnumData from "../../utils/EnumData.js";
 import router from "../../router/index.js";
 
 const phone = ref("");
