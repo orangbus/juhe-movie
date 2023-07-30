@@ -3,6 +3,7 @@ import router from "../router/index.js";
 import LocalStorage from "../utils/LocalStorage.js";
 import EnumData from "../utils/EnumData.js";
 import {login, website} from "../api/index.js";
+import {movieApiList} from "../api/movie.js";
 
 export const useUserStore = defineStore("userStore",{
 	state:()=>({
@@ -37,17 +38,61 @@ export const useUserStore = defineStore("userStore",{
 			this.user = user;
 			this.auth = auth;
 		}
-
 	}
 })
 
 export const useMovieStore = defineStore("movieStore", {
 	state: () => {
 		return {
-			movieApi:{},
-			movieList:[],
+			movieApi:{}, // 当前选择的视频接口
+			movieApiList:[], // 所有视频接口
+			movieCate:{}, // 电影小分类
+			movieCateList:[
+				{type: 0, name: '最新',list:[], icon: 'mdi-movie-filter-outline'},
+				{type: 1, name: '电影',list:[], icon: 'mdi-movie-filter-outline'},
+				{type: 2, name: '电视剧',list:[], icon: 'mdi-movie-roll'},
+				{type: 2, name: '综艺',list:[], icon: 'mdi-star'},
+				{type: 4, name: '动漫',list:[], icon: 'mdi-check-circle'},
+			],
+		}
+	},
+	actions:{
+		/**
+		 * 电影分类
+		 *  需要对电影进行处理
+		 */
+		setMovieCateList(data){
+			this.movieCateList[0].list = data.movie;
+			this.movieCateList[1].list = data.tv_play;
+			this.movieCateList[2].list = data.variety;
+			this.movieCateList[3].list = data.cartoon;
+		},
+
+		/**
+		 * 设置接口数据源
+		 */
+		setMovieApi(data){
+			this.movieApi = data;
+			LocalStorage.set(EnumData.movieApiLabel,data);
+		},
+
+		/**
+		 * 设置接口数据源列表
+		 */
+		setMovieApiList(data){
+			LocalStorage.set(EnumData.movieApiListLabel,data);
+			this.movieApiList = data;
+		},
+		getMovieApiList(){
+			let that = this;
+			movieApiList().then(res=>{
+				if (res.code === 200){
+					that.setMovieApiList(res.data)
+				}
+			});
 		}
 	}
+
 })
 
 export const useWebsiteStore = defineStore("websiteStore", {

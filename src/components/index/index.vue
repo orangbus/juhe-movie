@@ -1,66 +1,159 @@
 <script setup>
-import {ref,onMounted} from "vue"
-import {mock} from "../../mock/mock.js"
+import {ref, onMounted} from "vue"
 import MovieList from "../layout/MovieList.vue";
 import Footer from "../layout/Footer.vue";
 import AppHeader from "../layout/AppHeader.vue";
+import {freeMovieCate, freeMovieList} from "../../api/index.js";
+import {useMovieStore, useUserStore} from "../../store/index.js";
+import snackbar from "../../utils/snackbar.js";
+import {storeToRefs} from "pinia";
+import {movieCate, movieList} from "../../api/movie.js";
 
 const page = ref(1); // 分页
-const list = ref([]);
+const list = ref([]); // 视频列表
+const keywords = ref(""); // 搜索关键词
 const loading = ref(true);
 const showTop = ref(false);
 
+const movie = useMovieStore();
+const {movieApi} = storeToRefs(movie);
+const {auth} = storeToRefs(useUserStore());
+
+// 获取分类
+const getMovieCate = () => {
+    // 用户的呢牢固，并且选择了其它接口
+    let api =null;
+    if (auth.value && movieApi.value != null) {
+        api = movieCate({api_id:movieApi.value.id});
+    }else{
+        api = freeMovieCate();
+    }
+    api.then(res => {
+        if (res.code === 200) {
+            let data = res.data;
+            if (data != null){
+                movie.setMovieCateList(res.data);
+            }
+        }
+    });
+}
 const getData = () => {
     loading.value = true;
-    setTimeout(function () {
-        list.value.push(...mock.mockMovieList);
-        console.log("page:",page.value)
+    let param = {
+        path: page.value,
+        type: type.value,
+        keywords: keywords.value,
+        type_id: typeId.value
+    };
+    let api = null;
+    if (auth.value && movieApi.value != null) {
+        param.api_id = movieApi.value.id;
+        api = movieList(param);
+    }else{
+        api = freeMovieList(param);
+    }
+    api.then(res => {
         loading.value = false;
-    },1500)
+        if (res.code === 200) {
+            list.value.push(...res.data);
+        } else {
+            snackbar.error(res.msg);
+        }
+    });
+}
+const search = () => {
+    page.value = 1;
+    loading.value = true;
+    list.value = [];
+    getData()
 }
 
-onMounted(()=>{
+onMounted(() => {
     getData();
-    window.addEventListener("scroll",handleScroll);
+    getMovieCate();
+    window.addEventListener("scroll", handleScroll);
 })
-const handleScroll = ()=> {
+const handleScroll = () => {
     // 获取滚动位置
-    const scrollTop =
-        window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
     // 获取可视区域高度
     const clientHeight = window.innerHeight || document.documentElement.clientHeight;
     // 获取页面内容的高度
     const scrollHeight = document.documentElement.scrollHeight;
     // 判断是否滚动到页面底部（偏移值设为 50px）
     if (scrollHeight - (scrollTop + clientHeight) < 50 && !loading.value) {
-        page.value +=1;
+        page.value += 1;
         getData();
     }
-}
-
-
-// 监听宽度变化
-const onResize = ()=>{
-    // console.log(window.innerWidth)
+    // 显示到顶部
+    if (scrollHeight > clientHeight) {
+        showTop.value = true;
+    }
 }
 // 回到顶部
-const toTop = ()=>{
+const toTop = () => {
     document.body.scrollTop = 0;
     document.getElementById("backTop").scrollTop = -100;
 }
 
+const cateList = ref([]);
+const type = ref(0);
+const typeId = ref(0);
+const changeTab = (item, index) => {
+    type.value = item.type;
+    cateList.value = item.list;
+    typeId.value = 0;
+    search();
+}
+
+const changeApi = () => {
+    type.value = 0;
+    cateList.value = [];
+    typeId.value = 0;
+    search();
+    getMovieCate()
+}
+const changeCate = (item) => {
+    typeId.value = item.type_id;
+    // 重新搜索
+    search();
+}
 </script>
 
 <template>
-    <v-card  class="mx-auto primary " id="backTop"  v-resize="onResize" color="#ccc">
+    <v-card class="mx-auto primary " id="backTop" color="#ccc">
         <v-layout>
-            <AppHeader></AppHeader>
-            <v-main class="mt-3" id="backTop">
-                <!--视频列表-->
-                <v-container >
+            <AppHeader @changeTab="changeTab" @changeApi="changeApi"></AppHeader>
+            <v-main>
+                <v-container>
+                    <!--分类-->
+                    <v-row style="overflow-y: scroll" v-if="cateList.length > 0">
+                        <v-col cols="12" class="d-flex">
+                            <span v-ripple class="mr-2 cursor-pointer " v-for="(item,index) in cateList" :key="index"
+                                  @click="changeCate(item)">
+                            <v-chip label
+                                    :variant="typeId === item.type_id ? 'outlined':''"
+                                    color="primary">{{ item.type_name }}</v-chip>
+                            </span>
+                        </v-col>
+                    </v-row>
+                    <!--搜索-->
+                    <v-col cols="12" class="px-0 search-container">
+                        <div class="search">
+                            <input type="text" class="search-input" placeholder="请输入你的关键词，支持全文检索"
+                                   v-model="keywords"
+                                   @blur="search"
+                                   @keydown.enter="search"/>
+                            <div class="search-icon cursor-pointer" @click="search">
+                                <v-icon size="32">mdi-magnify</v-icon>
+                            </div>
+                        </div>
+                    </v-col>
+
+                    <!--视频列表-->
                     <MovieList :list="list"></MovieList>
                     <!--加载动画-->
-                    <v-col cols="12" class="text-center" v-show="loading">
+                    <v-col cols="12" class="text-center mt-3" v-show="loading">
                         <v-progress-circular
                             indeterminate
                             color="primary"
@@ -72,20 +165,40 @@ const toTop = ()=>{
             </v-main>
         </v-layout>
     </v-card>
-    <!--到顶部 -->
-    <v-btn
-        v-if="showTop"
-        class="mx-3"
-        :bottom="true"
-        color="primary"
-        @click="toTop"
-        style="position: absolute;bottom: 60px;right: 30px;width: 50px;height: 60px;border-radius: 50%"
-    >
-        <v-icon>
-            mdi-format-vertical-align-top
-        </v-icon>
-    </v-btn>
 </template>
 <style lang="scss" scoped>
+.search-container {
+    position: sticky;
 
+    .search {
+        position: relative;
+        padding-left: 0;
+        padding-right: 0;
+
+        .search-input {
+            width: 100%;
+            height: 50px;
+            background-color: white;
+            opacity: 0.5;
+            border: none;
+            outline: none;
+            padding: 10px 10px 10px 15px;
+            border-radius: 5px;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 0;
+            top: 0;
+            background-color: red;
+            width: 100px;
+            height: 100%;
+            color: white;
+            border-radius: 0px 5px 5px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+}
 </style>

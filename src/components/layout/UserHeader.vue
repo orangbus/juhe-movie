@@ -3,9 +3,11 @@ import {ref} from "vue";
 import router from "../../router/index.js";
 import {useUserStore, useWebsiteStore} from "../../store/index.js";
 import AppMenu from "./AppMenu.vue";
+import {storeToRefs} from "pinia";
 
-const userStore = useUserStore();
-const website = useWebsiteStore();
+const userStore  = useUserStore();
+const {user} = storeToRefs(userStore);
+const {website} = storeToRefs(useWebsiteStore());
 
 const drawer = ref(false);
 const model = ref(0);
@@ -42,7 +44,7 @@ const logout = ()=>{
             <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
         </template>
 
-        <v-app-bar-title class="cursor-pointer" @click="toPage">{{ website.name }}</v-app-bar-title>
+        <v-app-bar-title class="cursor-pointer" @click="toPage()">{{ website.name }}</v-app-bar-title>
 
         <v-spacer></v-spacer>
 

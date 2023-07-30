@@ -34,7 +34,9 @@ import 'vuetify/styles'
 // 加载图标样式
 import "@mdi/font/css/materialdesignicons.css"
 import vuetify from './plugins/vuetify'
-import {useWebsiteStore} from "./store/index.js";
+import {useMovieStore, useUserStore, useWebsiteStore} from "./store/index.js";
+import LocalStorage from "./utils/LocalStorage.js";
+import EnumData from "./utils/EnumData.js";
 
 // 图片放大
 
@@ -48,5 +50,25 @@ app.use(router)
 
 const website = useWebsiteStore()
 website.loadWebsite();
+
+const movie = useMovieStore();
+const movieApiList = LocalStorage.get(EnumData.movieApiListLabel);
+const movieApi = LocalStorage.get(EnumData.movieApiLabel);
+// 加载接口列表
+if (movieApiList== null){
+	movie.getMovieApiList();
+}else{
+	movie.setMovieApiList(movieApiList)
+}
+// 加载已经选择的列表
+if (movieApi !== null){
+	movie.setMovieApi(movieApi)
+}
+
+const userStore = useUserStore();
+const user = LocalStorage.get(EnumData.userLabel);
+if (user !== null){
+	userStore.setUser(user);
+}
 
 app.mount('#app')

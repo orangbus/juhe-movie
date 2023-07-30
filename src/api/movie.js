@@ -7,7 +7,7 @@ function baseUrl(url) {
 /**
  * 视频接口
  */
-export function apiList(params = {}) {
+export function movieApiList(params = {}) {
 	return axios.get(baseUrl("apiList"), {params});
 }
 

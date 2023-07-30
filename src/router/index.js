@@ -54,6 +54,27 @@ const routes = [
 	},
 
 	{
+		path:"/video",
+		name:"video",
+		component:()=>import("../components/video/index.vue"),
+		meta:{
+			keepAlive: true,
+			required: false,
+			transition: 'slide-left' // 动画效果
+		}
+	},
+	{
+		path:"/video/:id",
+		name:"videoDetail",
+		component:()=>import("../components/video/detail.vue"),
+		meta:{
+			keepAlive: false,
+			required: false,
+			transition: 'slide-left' // 动画效果
+		}
+	},
+
+	{
 		path:"/user",
 		name:"user",
 		component:()=>import("../components/user/index.vue"),

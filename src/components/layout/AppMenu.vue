@@ -14,8 +14,8 @@ const menuList = ref([
     {
         id:2,
         icon: "mdi-view-dashboard",
-        name: "个人中心",
-        path: "/user"
+        name: "视频",
+        path: "/video"
     },
     {
         id:3,

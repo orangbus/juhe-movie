@@ -1,11 +1,8 @@
 <script setup>
 import {ref,onMounted} from "vue"
-import {mock} from "../../mock/mock.js"
-import MovieList from "../layout/MovieList.vue";
 import Footer from "../layout/Footer.vue";
 import ArticleHeader from "../layout/ArticleHeader.vue";
 import router from "../../router/index.js";
-import {th} from "vuetify/locale";
 import {articleList} from "../../api/article.js";
 
 const page = ref(1); // 分页
@@ -26,12 +23,6 @@ const getData = () => {
 
         }
     });
-
-    // setTimeout(function () {
-    //     list.value.push(...mock.mockMovieList);
-    //     console.log("page:",page.value)
-    //     loading.value = false;
-    // },1500)
 }
 
 const toDetail = (item)=>{
