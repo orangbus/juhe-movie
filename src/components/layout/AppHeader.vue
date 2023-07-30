@@ -3,8 +3,8 @@ import {ref} from "vue";
 import router from "../../router/index.js";
 import AppMenu from "./AppMenu.vue";
 import {useWebsiteStore} from "../../store/index.js";
-
-const website = useWebsiteStore();
+import {storeToRefs} from "pinia";
+const {website} = storeToRefs(useWebsiteStore());
 
 const drawer = ref(false);
 const model = ref(0);
@@ -21,15 +21,13 @@ const toPage = (path="/")=>{
         path: path
     })
 }
-
-
-
 </script>
 
 <template>
     <!--头部导航-->
     <v-app-bar
         color="primary"
+        density="compact"
         image="https://picsum.photos/1920/1080?random"
     >
         <template v-slot:image>

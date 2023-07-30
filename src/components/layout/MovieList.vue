@@ -23,22 +23,27 @@ const toDetail = (item)=>{
             cols="6"
             @click="toDetail(item)"
         >
-            <v-card v-ripple>
-                <v-img :src="item.vod_pic"  cover class="align-end text-white movie-poster" >
-                    <v-card-title class="text-white" :v-text="item.type_name"></v-card-title>
-                </v-img>
-                <v-card-text>
-                    <div class="movie-title text-one-line">{{ item.vod_name}}</div>
-                    <div class="d-flex justify-space-between">
-                        <div class="text-one-line">
-                            {{ item.vod_remarks }}
+            <v-hover v-slot="{ isHovering, props }">
+                <v-card v-ripple
+                        :elevation="isHovering ? 12 : 2"
+                        :class="{ 'on-hover': isHovering }"
+                        v-bind="props">
+                    <v-img :src="item.vod_pic"  cover class="align-end text-white movie-poster" >
+                        <v-card-title class="text-white" :v-text="item.type_name"></v-card-title>
+                    </v-img>
+                    <v-card-text>
+                        <div class="movie-title text-one-line">{{ item.vod_name}}</div>
+                        <div class="d-flex justify-space-between">
+                            <div class="text-one-line">
+                                {{ item.vod_remarks }}
+                            </div>
+                            <div class="text-one-line">
+                                {{ item.updated_at.substring(0,10) }}
+                            </div>
                         </div>
-                        <div class="text-one-line">
-                            {{ item.updated_at.substring(0,10) }}
-                        </div>
-                    </div>
-                </v-card-text>
-            </v-card>
+                    </v-card-text>
+                </v-card>
+            </v-hover>
         </v-col>
     </v-row>
 </template>
