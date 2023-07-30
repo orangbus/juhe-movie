@@ -9,6 +9,8 @@ const EnumData = {
 	movieApiLabel: "movie_api",
 	movieApiListLabel:"movie_api_list",
 
+	videoApiLabel: "video_api",
+
 
 	movieGrid:{
 		xl: 2, // 4K 和超宽屏幕

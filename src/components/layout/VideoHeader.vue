@@ -2,13 +2,14 @@
 import {ref} from "vue";
 import router from "../../router/index.js";
 import AppMenu from "./AppMenu.vue";
-import {useMovieStore, useWebsiteStore} from "../../store/index.js";
+import {useVideoStore, useWebsiteStore} from "../../store/index.js";
 import {storeToRefs} from "pinia";
 const {website} = storeToRefs(useWebsiteStore());
-const {movieCateList} = storeToRefs(useMovieStore());
 
 const drawer = ref(false);
 const model = ref(0);
+const videoStore = useVideoStore();
+const {videoApiList} = storeToRefs(videoStore);
 
 // 切换头部tab
 const emit = defineEmits(["changeTab"])
@@ -38,7 +39,7 @@ const toPage = (path="/")=>{
         <template v-slot:prepend>
             <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
         </template>
-        <v-app-bar-title class="cursor-pointer" @click="toPage">{{ website.name }}</v-app-bar-title>
+        <v-app-bar-title class="cursor-pointer" @click="toPage()">{{ website.name }}</v-app-bar-title>
 
         <v-btn icon @click="toPage('/search')">
             <v-icon>mdi-magnify</v-icon>
@@ -54,7 +55,7 @@ const toPage = (path="/")=>{
                 align-tabs="title"
             >
                 <v-tab
-                    v-for="(item,index) in movieCateList"
+                    v-for="(item,index) in videoApiList"
                     :key="index"
                     :value="item.name"
                     @click="changeTab(item,index)"

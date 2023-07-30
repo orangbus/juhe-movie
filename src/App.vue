@@ -8,7 +8,7 @@ export default defineComponent({
         cachedViews(){
             return this.$router.options.routes
                 .filter((route) =>{
-                    route.media && route.meta.keepalive
+                    route.meta && route.meta.keepalive
                 })
                 .map((route)=>route.name)
         }
@@ -19,9 +19,7 @@ export default defineComponent({
 <template>
     <router-view v-slot="{Component,route}">
         <keep-alive :include="cachedViews.includes(route.name)">
-            <transition name="fade">
             <Component :is="Component"></Component>
-            </transition>
         </keep-alive>
     </router-view>
 </template>

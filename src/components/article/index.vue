@@ -6,6 +6,8 @@ import router from "../../router/index.js";
 import {articleList} from "../../api/article.js";
 
 const page = ref(1); // 分页
+const keywords = ref("");
+const cate_id = ref("");
 const list = ref([]);
 const loading = ref(true);
 const showTop = ref(false);
@@ -18,9 +20,14 @@ const search = ()=>{
 
 const getData = () => {
     loading.value = true;
-    articleList().then(res=>{
+    articleList({
+        page:page.value,
+        keyword: keywords.value,
+        cate_id:cate_id.value
+    }).then(res=>{
+        loading.value = false;
         if (res.code === 200){
-
+            list.value.push(...res.data);
         }
     });
 }
@@ -77,40 +84,13 @@ const toTop = ()=>{
                                class="cursor-pointer mt-0 pt-0"
                                v-for="(item,index) in list" :key="index" @click="toDetail(item)">
                             <v-card v-ripple>
-                                <v-card-title class="text-one-line">春节后不想上班的说说大全假期结束不想上班春节后不想上班的说说大全假期结束不想上班的心情说说配图的心情说说配图---{{index}}</v-card-title>
+                                <v-card-title class="text-one-line">{{  item.title }}</v-card-title>
                                 <v-card-subtitle>
-                                    恋爱宝典| 2023-10-20 0:20:32
+                                    {{ item.cate ? item.cate.name : ''}}| {{ item.site_name}} |{{ item.updated_at}}
                                 </v-card-subtitle>
-                                <v-card-text class=" pb-3">
-                                    1. 每个月都有三十天不想上班。
-
-
-                                    2. 没有中午休息时间，每天六点半就要起床，单位领导要多有多，同事也总是欺负我善良。我是有多想辞职啊。
-
-
-                                    3. 明天是节后第一天上班,各位朋友们准备好了吗?明天倒没有什么温差,气温在-℃,不过北风来势汹汹,加上下雨,雨伞和围巾羽绒服都是出门必备品。
-
-
-                                    4. 春节最后一天啦,大家要警惕节后综合症:
-
-
-                                    5. 疲惫不堪;神经性厌食;想睡觉;不想上班;工作精神不集中;反应有些迟缓;心情忧郁;感觉孤单;还在回味假期的美好时光。
-
-
-                                    6. 春节后第一天上班,在西安的第一场雪后,冷冷的,睡眼惺忪的,再也不能贪恋的自然醒去哪呢?
-
-
-                                    7. 春节即将结束,明天将是节后上班的第一天。从愉快的假期回归工作当中,节后综合征也相伴而来。
-
-
-                                    8. 明天初八,是节后第一天上班的日子。祝大家八万发财,万事如意!
-
-
-                                    9. 节后第一天上班,有木有觉得连吃饭时刻都还在发困?有木有发觉长假其实也不长? 速度振作,快速调整,要加油哟!
-
-
-                                    10. 春节后第一天上班,小伙伴们~心想事成哦!
-
+                                <v-card-text
+                                    class="pb-3" >
+                                    <div class="text-ten-line" v-html="item.content"></div>
                                 </v-card-text>
                             </v-card>
                         </v-col>

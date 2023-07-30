@@ -1,19 +1,13 @@
 import axios from "axios";
 
-const app_debug = process.env.VUE_APP_DEBUG;
-
 function baseUrl(url) {
-	if (app_debug){
-		return "/api/video/" + url;
-	}else{
-		return "/" + url;
-	}
+	return "/api/video/" + url;
 }
 
 /**
  * 视频接口
  */
-export function apiList(params = {}) {
+export function videoApiList(params = {}) {
 	return axios.get(baseUrl("api"), {params});
 }
 

@@ -2,8 +2,9 @@ import {defineStore} from "pinia";
 import router from "../router/index.js";
 import LocalStorage from "../utils/LocalStorage.js";
 import EnumData from "../utils/EnumData.js";
-import {login, website} from "../api/index.js";
+import {website} from "../api/index.js";
 import {movieApiList} from "../api/movie.js";
+import { videoApiList} from "../api/video.js";
 
 export const useUserStore = defineStore("userStore",{
 	state:()=>({
@@ -121,6 +122,37 @@ export const useWebsiteStore = defineStore("websiteStore", {
 				this.website = website;
 			}else{
 				this.getWebsite();
+			}
+		}
+	}
+})
+export const useVideoStore = defineStore("videoStore", {
+	state: () => {
+		return {
+			videoApiList: [],
+		}
+	},
+	actions:{
+		getVideoApi(){
+			const that = this;
+			videoApiList().then(res=>{
+				let {code,data} = res.data;
+				if (code === 200){
+					that.videoApiList = data;
+					LocalStorage.set(EnumData.videoApiLabel,data)
+				}
+			});
+		},
+		setVideoApi(data){
+			this.videoApiList = data;
+			LocalStorage.set(EnumData.videoApiLabel,data)
+		},
+		loadVideoApi(refresh=false){
+			const videoApi = LocalStorage.get(EnumData.videoApiLabel);
+			if (videoApi != null){
+				refresh ? this.getVideoApi():this.videoApi = videoApi;
+			}else{
+				this.getVideoApi();
 			}
 		}
 	}

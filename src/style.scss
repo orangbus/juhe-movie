@@ -1,3 +1,6 @@
+.bg-color{
+ background-color: #ccc;
+}
 .cursor-pointer{
   cursor: pointer;
 }
@@ -26,6 +29,15 @@
   overflow: hidden;
   -webkit-line-clamp: 5;
   -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+}
+
+.text-ten-line {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 10;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
 }
 
 .movie-container{

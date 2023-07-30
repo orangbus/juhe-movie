@@ -4,7 +4,6 @@ import { createApp } from 'vue'
 import './style.scss'
 import App from './App.vue'
 
-
 // 路由
 import router from "./router/index.js";
 
@@ -38,9 +37,6 @@ import {useMovieStore, useUserStore, useWebsiteStore} from "./store/index.js";
 import LocalStorage from "./utils/LocalStorage.js";
 import EnumData from "./utils/EnumData.js";
 
-// 图片放大
-
-
 const app = createApp(App);
 
 app.use(router)
@@ -70,5 +66,4 @@ const user = LocalStorage.get(EnumData.userLabel);
 if (user !== null){
 	userStore.setUser(user);
 }
-
 app.mount('#app')

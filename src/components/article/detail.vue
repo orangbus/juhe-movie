@@ -7,14 +7,14 @@ import ArticleHeader from "../layout/ArticleHeader.vue";
 import router from "../../router/index.js";
 import {articleList} from "../../api/article.js";
 
-const page = ref(1); // 分页
+const id = ref(0);
+const page = ref(1);
 const list = ref([]);
 const loading = ref(true);
 const showTop = ref(false);
 
 const getData = () => {
     loading.value = true;
-
     // setTimeout(function () {
     //     list.value.push(...mock.mockMovieList);
     //     console.log("page:",page.value)
@@ -27,6 +27,7 @@ const backUp = ()=>{
 }
 
 onMounted(()=>{
+    id.value = router.currentRoute.value.params.id;
     getData();
     window.addEventListener("scroll",handleScroll);
 })
@@ -44,8 +45,6 @@ const handleScroll = ()=> {
         getData();
     }
 }
-
-
 const toDetail = (item)=>{
     router.push({path:"/article/1"})
 }
