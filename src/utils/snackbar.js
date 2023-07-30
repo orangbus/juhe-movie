@@ -7,7 +7,13 @@ let snackbar ={
 		return toast(msg);
 	},
 	success:(msg="success")=>{
-		return toast(msg);
+		return toast.success(msg);
+	},
+	info:(msg="提示")=>{
+		return toast.info(msg);
+	},
+	warning:(msg="警告")=>{
+		return toast.warning(msg);
 	},
 	error:(msg="error")=>{
 		return toast.error(msg);

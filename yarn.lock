@@ -484,6 +484,11 @@ to-regex-range@^5.0.1:
   dependencies:
     is-number "^7.0.0"
 
+viewerjs@^1.11.4:
+  version "1.11.4"
+  resolved "https://registry.npmmirror.com/viewerjs/-/viewerjs-1.11.4.tgz#3f8f10ca14f72d2ad16249ee239ebfa1ed3e736f"
+  integrity sha512-/mnqMIwt5Bi9j59+48OqQtqgOx8oh186Xshdr/dqqBrakMSMlLt/jmeNHBod0PvOkesZf66ivQbWmtWYBlKetg==
+
 vite@^4.4.5:
   version "4.4.7"
   resolved "https://registry.npmmirror.com/vite/-/vite-4.4.7.tgz#71b8a37abaf8d50561aca084dbb77fa342824154"
@@ -506,6 +511,11 @@ vue-router@4:
   integrity sha512-9PISkmaCO02OzPVOMq2w82ilty6+xJmQrarYZDkjZBfl4RvYAlt4PKnEX21oW4KTtWfa9OuO/b3qk1Od3AEdCQ==
   dependencies:
     "@vue/devtools-api" "^6.5.0"
+
+vue-toastification@^2.0.0-rc.5:
+  version "2.0.0-rc.5"
+  resolved "https://registry.npmmirror.com/vue-toastification/-/vue-toastification-2.0.0-rc.5.tgz#92798604d806ae473cfb76ed776fae294280f8f8"
+  integrity sha512-q73e5jy6gucEO/U+P48hqX+/qyXDozAGmaGgLFm5tXX4wJBcVsnGp4e/iJqlm9xzHETYOilUuwOUje2Qg1JdwA==
 
 vue@^3.3.4:
   version "3.3.4"

@@ -2,19 +2,66 @@
 import {ref} from "vue";
 import EnumData from "../../utils/EnumData.js";
 import router from "../../router/index.js";
+import snackbar from "../../utils/snackbar.js";
+import {useUserStore} from "../../store/index.js";
+import {login, register} from "../../api/index.js";
+import LocalStorage from "../../utils/LocalStorage.js";
 
-const phone = ref("");
-const password = ref("");
+const phone = ref("18388112576");
+const password = ref("admin666");
 const loading = ref(false);
 const is_login = ref(true);
 const tab = ref(null);
 const items = ref(["登录","注册"])
 
-const login = () => {
-    loading.value = true;
-    setTimeout(function () {
-        loading.value = false;
-    },1000)
+const userStore = useUserStore();
+
+const submitLogin = () => {
+    if (phone.value == ""){
+        return snackbar.warning("请输入手机号");
+    }
+    if (password.value == ""){
+        return snackbar.warning("请输入密码");
+    }
+    if (is_login){
+        loading.value = true;
+        login({
+            phone:phone.value,
+            password:password.value,
+        }).then(res=>{
+               loading.value = false;
+            if (res.code === 200){
+               let {access_token,user,refresh_token} = res.data;
+               LocalStorage.set(EnumData.tokenLabel,access_token);
+               LocalStorage.set(EnumData.refreshTokenLabel,refresh_token);
+                userStore.setUser(user);
+                router.push({path:"/"})
+            }else{
+                snackbar.error(res.msg);
+            }
+        });
+    }else{
+        if (name.value == ""){
+            return snackbar.warning("请输入用户名");
+        }
+        loading.value = true;
+        register({
+            name:name.value,
+            phone:phone.value,
+            password:password.value,
+        }).then(res=>{
+               loading.value = false;
+            if (res.code === 200){
+                let {access_token,user,refresh_token} = res.data;
+                LocalStorage.set(EnumData.tokenLabel,access_token);
+                LocalStorage.set(EnumData.refreshTokenLabel,refresh_token);
+                useUserStore().setUser(user);
+                router.push({path:"/"})
+            }else{
+                snackbar.error(res.msg);
+            }
+        });
+    }
 };
 
 const changeTab = (e) => {
@@ -75,7 +122,7 @@ const openMenu = () => {
                             <v-sheet class="mx-auto primary px-5 py-15 rounded-lg">
                                 <div class="login">{{ is_login ? '登 录' :'注册'}}</div>
                                 <v-text-field
-                                    v-if="is_login"
+                                    v-if="!is_login"
                                     v-model="name"
                                     type="text"
                                     required
@@ -102,7 +149,7 @@ const openMenu = () => {
                                     block
                                     class="mt-2"
                                     :text="is_login ? '登 录' :'立即注册'"
-                                    @click="login"
+                                    @click="submitLogin"
                                 ></v-btn>
                             </v-sheet>
                         </v-col>

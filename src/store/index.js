@@ -2,20 +2,17 @@ import {defineStore} from "pinia";
 import router from "../router/index.js";
 import LocalStorage from "../utils/LocalStorage.js";
 import EnumData from "../utils/EnumData.js";
-import {website} from "../api/index.js";
-import {th} from "vuetify/locale";
+import {login, website} from "../api/index.js";
 
 export const useUserStore = defineStore("userStore",{
 	state:()=>({
+		auth:false,
 		user:{
-			name: "OrangBus",
-			phone: "18388112501"
+			name: "",
+			phone: ""
 		}
 	}),
 	actions:{
-		userLogin(){
-
-		},
 		getUserInfo(){
 
 		},
@@ -27,7 +24,7 @@ export const useUserStore = defineStore("userStore",{
 				path:"/login"
 			})
 		},
-		setUser: (state,user) => {
+		setUser (user){
 			LocalStorage.set(EnumData.userLabel,user);
 			this.user = user;
 			this.auth = true;
