@@ -18,7 +18,9 @@ const cateList = ref([
 const {user}  = storeToRefs(useUserStore());
 
 const props = defineProps(["show"]);
-show.value = props.show;
+if (props.show !== undefined){
+    show.value = props.show;
+}
 
 // 切换头部tab
 const emit = defineEmits(["changeTab"])
@@ -33,10 +35,10 @@ const toPage = (path="/")=>{
 </script>
 
 <template>
-    <!--头部导航 https://picsum.photos/1920/1080?random-->
+    <!--头部导航 -->
     <v-app-bar
         color="primary"
-        image="/images/background.png"
+        image="https://picsum.photos/1920/1080?random"
     >
         <template v-slot:image>
             <v-img

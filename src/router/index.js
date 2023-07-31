@@ -1,4 +1,6 @@
 import {createRouter, createWebHistory} from "vue-router";
+import LocalStorage from "../utils/LocalStorage.js";
+import EnumData from "../utils/EnumData.js";
 
 const routes = [
 	{
@@ -80,7 +82,7 @@ const routes = [
 		component:()=>import("../components/video/detail.vue"),
 		meta:{
 			keepAlive: false,
-			required: false,
+			required: true,
 			transition: 'slide-left' // 动画效果
 		}
 	},
@@ -117,10 +119,13 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to,from,next)=>{
-	if (to.meta.required){
-		next({
-			name:"login"
-		});
+	const token = LocalStorage.get(EnumData.tokenLabel);
+	if (to.meta.required || token === null){
+		if (to.name != "login"){
+			next({
+				path:"/login"
+			});
+		}
 	}
 	next();
 })

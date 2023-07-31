@@ -1,8 +1,8 @@
 <script setup>
 import {ref, onMounted} from "vue"
-import MovieList from "../layout/MovieList.vue";
 import Footer from "../layout/Footer.vue";
 import AppHeader from "../layout/AppHeader.vue";
+import MovieList from "../layout/MovieList.vue";
 import {freeMovieCate, freeMovieList} from "../../api/index.js";
 import {useMovieStore, useUserStore} from "../../store/index.js";
 import snackbar from "../../utils/snackbar.js";
@@ -19,11 +19,12 @@ const movie = useMovieStore();
 const {movieApi} = storeToRefs(movie);
 const {auth} = storeToRefs(useUserStore());
 
+
 // 获取分类
 const getMovieCate = () => {
     // 用户的呢牢固，并且选择了其它接口
     let api =null;
-    if (auth.value && movieApi.value != null) {
+    if (auth.value != null && movieApi.value != null) {
         api = movieCate({api_id:movieApi.value.id});
     }else{
         api = freeMovieCate();
@@ -46,7 +47,7 @@ const getData = () => {
         type_id: typeId.value
     };
     let api = null;
-    if (auth.value && movieApi.value != null) {
+    if (auth.value != null && movieApi.value != null) {
         param.api_id = movieApi.value.id;
         api = movieList(param);
     }else{
@@ -73,6 +74,7 @@ onMounted(() => {
     getMovieCate();
     window.addEventListener("scroll", handleScroll);
 })
+
 const handleScroll = () => {
     // 获取滚动位置
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
@@ -125,7 +127,7 @@ const changeCate = (item) => {
         <v-layout>
             <AppHeader @changeTab="changeTab" @changeApi="changeApi"></AppHeader>
             <v-main>
-                <v-container>
+                <v-container class="px-1">
                     <!--分类-->
                     <v-row style="overflow-y: scroll" v-if="cateList.length > 0">
                         <v-col cols="12" class="d-flex">
@@ -149,7 +151,6 @@ const changeCate = (item) => {
                             </div>
                         </div>
                     </v-col>
-
                     <!--视频列表-->
                     <MovieList :list="list"></MovieList>
                     <!--加载动画-->
@@ -160,7 +161,6 @@ const changeCate = (item) => {
                         ></v-progress-circular>
                     </v-col>
                 </v-container>
-
                 <Footer></Footer>
             </v-main>
         </v-layout>

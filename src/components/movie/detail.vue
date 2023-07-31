@@ -9,6 +9,7 @@ import MovieUtil from "../../utils/MovieUtil.js";
 import snackbar from "../../utils/snackbar.js";
 
 const id = ref(0);
+const loading = ref(true);
 const list = ref([]);
 const movie = ref({})
 const height = ref("700px"); //  700px
@@ -21,7 +22,9 @@ const cateIndex = ref(0); // 分类索引
 const urlIndex = ref(0); // 播放索引
 
 const getData = () => {
+    loading.value = true;
     movieDetail(id.value).then(res => {
+        loading.value = false;
         if (res.code === 200) {
             let {info, api} = res.data;
             if (api != null) {
@@ -66,6 +69,7 @@ const changeUrl = (item,index)=>{
 const startPlay = (url="")=>{
     if (url === ""){
         snackbar.error("播放地址错误")
+        return false;
     }
     // m3u8 格式的
     if (url.includes("m3u8")){
@@ -73,7 +77,6 @@ const startPlay = (url="")=>{
     }else{
         playerUrl.value = url;
     }
-    console.log( playerUrl.value)
 }
 
 onMounted(() => {
@@ -82,8 +85,8 @@ onMounted(() => {
 })
 
 const backUp = ()=>{
-    router.push({path:"/"})
-    // window.history.back();
+    // router.push({path:"/"})
+    window.history.back(-1);
 }
 const collect = (item)=>{
     movieCollectStore({
@@ -117,7 +120,7 @@ const collect = (item)=>{
                             class=" p-0"
                             cols="12" sm="12" xs="12" md="12" lg="9">
                             <iframe
-                                v-if="playerUrl"
+                                v-if="playerUrl !== '' && !loading"
                                 class="movie-player mobile"
                                 :src="playerUrl"
                                 allowfullscreen

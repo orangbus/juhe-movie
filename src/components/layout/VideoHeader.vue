@@ -11,6 +11,12 @@ const model = ref(0);
 const videoStore = useVideoStore();
 const {videoApiList} = storeToRefs(videoStore);
 
+const show = ref(true)
+const props = defineProps(["show"]);
+if (props.show !== undefined){
+    show.value = props.show;
+}
+
 // 切换头部tab
 const emit = defineEmits(["changeTab"])
 const changeTab = (item,index)=>{
@@ -48,7 +54,7 @@ const toPage = (path="/")=>{
             <v-icon>mdi-account-circle</v-icon>
         </v-btn>
 
-        <template v-slot:extension>
+        <template v-slot:extension v-if="show">
             <v-tabs
                 v-model="model"
                 align-tabs="title"

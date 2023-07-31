@@ -12,37 +12,35 @@ import MyHistory from "../common/MyHistory.vue";
 import MySetting from "../common/MySetting.vue";
 
 const list = ref([]);
-const tab = ref(5);
+const tab = ref(1);
 
 const {user} = storeToRefs(useUserStore());
-
-const getData = () => {
-
-}
-
-onMounted(()=>{
-    getData();
-})
 
 const changeTab = (item)=>{
     tab.value = item.id;
 }
+
+// 回到顶部
+const toTop = () => {
+    document.body.scrollTop = 0;
+    document.getElementById("backTop").scrollTop = -100;
+}
 </script>
 
 <template>
-    <v-card  class="mx-auto h-100" id="backTop">
+    <v-card  class="mx-auto" id="backTop">
         <v-layout>
             <!--头部导航-->
            <UserHeader @changeTab="changeTab" :tab="tab"></UserHeader>
 
-            <v-main class="mt-3">
+            <v-main >
                 <v-container >
                     <!--个人中心-->
                     <UserCenter v-if="tab === 1"></UserCenter>
-                    <MyCollet v-if="tab === 2"></MyCollet>
-                    <MyHistory v-if="tab === 3"></MyHistory>
+                    <MyCollet @toTop="toTop" v-if="tab === 2"></MyCollet>
+                    <MyHistory @toTop="toTop" v-if="tab === 3"></MyHistory>
                     <!--我的邀请-->
-                    <MyInviteList v-if="tab === 4"></MyInviteList>
+                    <MyInviteList @toTop="toTop" v-if="tab === 4"></MyInviteList>
                     <MySetting v-if="tab === 5"></MySetting>
                 </v-container>
             </v-main>

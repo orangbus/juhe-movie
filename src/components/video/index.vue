@@ -1,12 +1,11 @@
 <script setup>
 import VideoHeader from "../layout/VideoHeader.vue";
 import {onMounted, ref} from "vue";
-import {mock} from "../../mock/mock.js";
 import Footer from "../layout/Footer.vue";
-import VideoList from "../layout/VideoList.vue";
 import snackbar from "../../utils/snackbar.js";
 import {videoApiList, videoList} from "../../api/video.js";
 import {useVideoStore} from "../../store/index.js";
+import VideoDataList from "../layout/VideoDataList.vue";
 
 const page = ref(1);
 const api_id = ref(0);
@@ -14,30 +13,31 @@ const cid = ref("");
 const cateList = ref([]);
 const keywords = ref("");
 const loading = ref(true);
-const list = ref(mock.mockMovieList);
+const list = ref([]);
 const videoStore = useVideoStore();
 
 
 const getData = () => {
     loading.value = true;
-    // videoList({
-    //     page: page.value,
-    //     api_id: api_id.value,
-    //     cid: cid.value,
-    //     keywords: keywords.value,
-    // }).then(res=>{
-    //     loading.value = false;
-    //     if (res.code === 200){
-    //         list.value.push(...res.data);
-    //     }
-    // })
-    setTimeout(function () {
-        list.value.push(...mock.mockMovieList);
-        console.log("page:",page.value)
+    videoList({
+        page: page.value,
+        api_id: api_id.value,
+        cid: cid.value,
+        keywords: keywords.value,
+    }).then(res=>{
         loading.value = false;
-    },1500)
+        if (res.code === 200){
+            list.value.push(...res.data);
+        }
+    })
 }
 const search = ()=>{
+    if (keywords.value === ""){
+        return false;
+    }
+    resetData();
+}
+const resetData = ()=>{
     page.value = 1;
     list.value = [];
     getData();
@@ -74,12 +74,13 @@ const handleScroll = ()=> {
     }
 }
 const changeTab = (item,index)=>{
-        cateList.value = item.cate;
-        search();
+        api_id.value = item.id;
+        cid.value = 0;
+        resetData();
 }
 const changeCate = (item)=>{
     cid.value = item.id;
-    search();
+    resetData();
 }
 
 </script>
@@ -114,7 +115,7 @@ const changeCate = (item)=>{
                             </div>
                         </div>
                     </v-col>
-                    <video-list :list="list"></video-list>
+                    <VideoDataList :list="list"></VideoDataList>
 
                     <!--加载动画-->
                     <v-col cols="12" class="text-center" v-show="loading">

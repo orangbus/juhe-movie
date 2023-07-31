@@ -102,7 +102,13 @@ export const useWebsiteStore = defineStore("websiteStore", {
 			website: {
 				name: "聚合影视",
 				url: "http://localhost"
-			}
+			},
+			links:[
+				{name:'OrangBus',url: ""},
+				{name:'券满多',url: ""},
+				{name:'Github',url: ""},
+				{name:'电报交流群',url: ""},
+			],
 		}
 	},
 	actions:{

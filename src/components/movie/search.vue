@@ -4,20 +4,30 @@ import {mock} from "../../mock/mock.js"
 import MovieList from "../layout/MovieList.vue";
 import Footer from "../layout/Footer.vue";
 import SearchHeader from "../layout/SearchHeader.vue";
+import {movieSearch} from "../../api/movie.js";
+import snackbar from "../../utils/snackbar.js";
 
-const page = ref(1); // 分页
+const page = ref(1);
+const total = ref(0);
 const list = ref([]);
 const loading = ref(true);
 const tab = ref(0);
 const keywords = ref("");
-
 const getData = () => {
     loading.value = true;
-    setTimeout(function () {
-        list.value.push(...mock.mockMovieList);
-        console.log("page:",page.value)
+    movieSearch({
+        page:page.value,
+        vod_name: keywords.value,
+        type: tab.value
+    }).then(res=>{
         loading.value = false;
-    },1500)
+        if (res.code === 200){
+            list.value.push(...res.data);
+            total.value = res.total;
+        }else{
+            snackbar.error(res.msg);
+        }
+    });
 }
 const search = ()=>{
     page.value = 1;
@@ -45,6 +55,7 @@ const handleScroll = ()=> {
     const scrollHeight = document.documentElement.scrollHeight;
     // 判断是否滚动到页面底部（偏移值设为 50px）
     if (scrollHeight - (scrollTop + clientHeight) < 50 && !loading.value) {
+        loading.value = true;
         page.value +=1;
         getData();
     }
@@ -59,7 +70,6 @@ const toTop = ()=>{
     document.body.scrollTop = 0;
     document.getElementById("backTop").scrollTop = -100;
 }
-
 </script>
 
 <template>

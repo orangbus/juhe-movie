@@ -80,7 +80,7 @@ const toDetail = (item) => {
     height: 350px;
 
     @media screen and (max-width: 600px) {
-        height: 250px;
+        height: 240px;
     }
     /* 在宽度大于 600px 且小于等于 1200px 时应用的样式 */
     @media screen and (min-width: 601px) and (max-width: 1200px) {

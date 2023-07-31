@@ -3,18 +3,20 @@ import {ref} from "vue";
 import EnumData from "../../utils/EnumData.js";
 import router from "../../router/index.js";
 import snackbar from "../../utils/snackbar.js";
-import {useUserStore} from "../../store/index.js";
+import {useUserStore, useWebsiteStore} from "../../store/index.js";
 import {login, register} from "../../api/index.js";
 import LocalStorage from "../../utils/LocalStorage.js";
+import {storeToRefs} from "pinia";
 
-const phone = ref("18388112576");
-const password = ref("admin666");
+const phone = ref("");
+const password = ref("");
 const loading = ref(false);
 const is_login = ref(true);
 const tab = ref(null);
 const items = ref(["登录","注册"])
 
 const userStore = useUserStore();
+const {links} = storeToRefs(useWebsiteStore());
 
 const submitLogin = () => {
     if (phone.value == ""){
@@ -35,7 +37,7 @@ const submitLogin = () => {
                LocalStorage.set(EnumData.tokenLabel,access_token);
                LocalStorage.set(EnumData.refreshTokenLabel,refresh_token);
                 userStore.setUser(user);
-                router.push({path:"/"})
+                router.push({path:"/?refresh=true"})
             }else{
                 snackbar.error(res.msg);
             }
@@ -56,7 +58,7 @@ const submitLogin = () => {
                 LocalStorage.set(EnumData.tokenLabel,access_token);
                 LocalStorage.set(EnumData.refreshTokenLabel,refresh_token);
                 useUserStore().setUser(user);
-                router.push({path:"/"})
+                router.push({path:"/?refresh=true"})
             }else{
                 snackbar.error(res.msg);
             }
@@ -77,7 +79,7 @@ const openMenu = () => {
 </script>
 
 <template>
-    <v-card  class="mx-auto primary xyScrollBar container">
+    <v-card  class="mx-auto bg-primary xyScrollBar container">
         <v-layout>
             <v-app-bar
                 color="primary"
@@ -121,24 +123,29 @@ const openMenu = () => {
                         >
                             <v-sheet class="mx-auto primary px-5 py-15 rounded-lg">
                                 <div class="login">{{ is_login ? '登 录' :'注册'}}</div>
+                                <v-divider />
                                 <v-text-field
                                     v-if="!is_login"
                                     v-model="name"
                                     type="text"
                                     required
                                     label="用户名"
+                                    variant="outlined"
                                 ></v-text-field>
                                 <v-text-field
                                     v-model="phone"
                                     type="number"
                                     required
                                     label="手机号"
+                                    maxlength="11"
+                                    variant="outlined"
                                 ></v-text-field>
                                 <v-text-field
                                     v-model="password"
                                     type="password"
                                     required
                                     label="密码"
+                                    variant="outlined"
                                 ></v-text-field>
 
                                 <v-btn
@@ -156,7 +163,7 @@ const openMenu = () => {
                     </v-row>
                 </v-container>
 
-                <v-footer class="bg-pink text-black" style="position: absolute;bottom: 0px;width: 100%;">
+                <v-footer class="bg-primary text-black" style="position: absolute;bottom: 0px;width: 100%;">
                     <v-row justify="center" no-gutters>
                         <v-btn
                             v-for="link in links"
@@ -166,10 +173,10 @@ const openMenu = () => {
                             class="mx-2 text-black"
                             rounded="xl"
                         >
-                            {{ link }}
+                            {{ link.name }}
                         </v-btn>
-                        <v-col class="text-center mt-4" cols="12">
-                            {{ new Date().getFullYear() }} — <strong>Vuetify</strong>
+                        <v-col class="text-center mt-4 text-white" cols="12">
+                            {{ new Date().getFullYear() }} — <strong>以上资源来自网络爬虫，如何侵犯你的权益，请联系站长删除相关内容，谢谢！</strong>
                         </v-col>
                     </v-row>
                 </v-footer>
@@ -182,7 +189,7 @@ const openMenu = () => {
 .container{
     width: 100%;
     height: 100vh;
-    background-image: url("https://picsum.photos/id/11/1400/800");
+    background-image: url("/images/login-bg.png");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center center;

@@ -1,12 +1,8 @@
 <script setup>
-import {ref} from "vue";
+import {storeToRefs} from "pinia";
+import {useWebsiteStore} from "../../store/index.js";
 
-const links = ref([
-    'OrangBus',
-    '券满多',
-    'Github',
-    '电报交流群',
-]);
+const {links} = storeToRefs(useWebsiteStore());
 </script>
 
 <template>
@@ -21,7 +17,7 @@ const links = ref([
                 class="mx-2 text-black"
                 rounded="xl"
             >
-                {{ link }}
+                {{ link.name }}
             </v-btn>
             <v-col class="text-center mt-4 text-white" cols="12">
                 {{ new Date().getFullYear() }} — <strong>以上资源来自网络爬虫，如何侵犯你的权益，请联系站长删除相关内容，谢谢！</strong>

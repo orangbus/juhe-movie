@@ -1,8 +1,11 @@
 <script setup>
 
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
+import {inviteList} from "../../api/user.js";
+import snackbar from "../../utils/snackbar.js";
 const list = ref([]);
 
+const loading = ref(true);
 const page = ref(0);
 const limit = ref(20);
 const total = ref(0);
@@ -15,10 +18,26 @@ const grid = ref({
 });
 
 const getData = ()=>{
-
+    loading.value = true;
+    inviteList({
+        page:page.value,
+        limit:limit.value
+    }).then(res=>{
+        loading.value = false;
+        if (res.code === 200){
+            list.value = res.data;
+            total.value = res.total;
+        }else{
+            snackbar.error(res.msg);
+        }
+    });
 }
-const changePage = (page)=>{
-    page.value = page;
+onMounted(()=>{
+    getData();
+})
+const changePage = (number)=>{
+    page.value = number;
+    list.value = [];
     getData();
     
 }
@@ -47,26 +66,33 @@ const prev = ()=>{
                             :color="isHovering ? 'primary' : undefined">
                         <div>
                             <v-avatar color="info">
-                                <span>张</span>
+                                <span>{{ item.name.substring(0,1) }}</span>
                             </v-avatar>
                         </div>
                         <div class="w-100">
                             <v-card-title>
                                 <div class="d-flex justify-space-between">
-                                    <div>张三</div>
-                                    <div style="font-size: 13px">会员</div>
+                                    <div>{{  item.name }}</div>
+                                    <div style="font-size: 13px">{{ item.is_vip ? '会员':'' }}</div>
                                 </div>
                             </v-card-title>
                             <v-card-subtitle >
                                 <div class="d-flex justify-space-between align-center pb-3">
-                                    <div>18388112576</div>
-                                    <div>2023-10-20 10:00:00</div>
+                                    <div>{{  item.phone }}</div>
+                                    <div>{{ item.created_at}}</div>
                                 </div>
                             </v-card-subtitle>
                         </div>
                     </v-card>
                 </template>
             </v-hover>
+        </v-col>
+        <!--加载动画-->
+        <v-col cols="12" class="text-center mt-3" v-show="loading">
+            <v-progress-circular
+                indeterminate
+                color="primary"
+            ></v-progress-circular>
         </v-col>
         <v-col cols="12">
             <div class="text-center" v-if="total > limit">

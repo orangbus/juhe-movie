@@ -6,10 +6,9 @@ import {defineProps, ref} from "vue";
 import router from "../../router/index.js";
 
 const props = defineProps(["list"]);
-// const postHeight = ref(250); // 封面图高度 350 250
 
 const toDetail = (item) => {
-    router.push("/detail/" + item.id)
+    router.push("/video/" + item.id)
 }
 
 </script>
@@ -42,15 +41,12 @@ const toDetail = (item) => {
                             >
                             </v-img>
                         </template>
-                        <v-card-title class="text-white movie-type">
-                            <span>{{ item.type_name }}</span>
-                        </v-card-title>
                     </v-img>
                     <v-card-text>
-                        <div class="movie-title text-one-line">{{ item.vod_name }}</div>
+                        <div class="movie-title text-one-line">{{ item.vod_title }}</div>
                         <div class="d-flex justify-space-between">
                             <div class="text-one-line">
-                                {{ item.vod_remarks }}
+                                {{ item.category }}
                             </div>
                             <div class="text-one-line">
                                 {{ item.updated_at.substring(0, 10) }}
