@@ -43,6 +43,17 @@ const routes = [
 		}
 	},
 	{
+		path:"/jiexi",
+		name:"jiexi",
+		component:()=>import("../components/movie/jiexi.vue"),
+		meta:{
+			keepAlive: false,
+			required: false,
+			transition: 'slide-left' // 动画效果
+		}
+	},
+
+	{
 		path:"/article/:id",
 		name:"articleDetail",
 		component:()=>import("../components/article/detail.vue"),

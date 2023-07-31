@@ -6,20 +6,17 @@ import router from "../../router/index.js";
 const props= defineProps(["drawer"])
 const menuList = ref([
     {
-        id:1,
-        icon: "mdi-view-dashboard",
-        name: "首页",
-        path: "/"
-    },
-    {
-        id:2,
-        icon: "mdi-view-dashboard",
+        icon: "mdi-high-definition-box",
         name: "视频",
         path: "/video"
     },
     {
-        id:3,
-        icon: "mdi-view-dashboard",
+        icon: "mdi-play-circle",
+        name: "解析",
+        path: "/jiexi"
+    },
+    {
+        icon: "mdi-format-list-text",
         name: "文章",
         path: "/article"
     }
@@ -30,7 +27,6 @@ const toPage = (path="/")=>{
         path: path
     })
 }
-
 </script>
 
 <template>
@@ -46,7 +42,7 @@ const toPage = (path="/")=>{
             <v-list-item
                 :prepend-icon="item.icon"
                 :title="item.name"
-                :value="item.id"
+                :value="item.name"
                 v-for="(item,index) in menuList"
                 :key="index"
                 @click="toPage(item.path)"

@@ -3,12 +3,13 @@ import {ref,onMounted} from "vue"
 import {mock} from "../../mock/mock.js"
 import MovieList from "../layout/MovieList.vue";
 import Footer from "../layout/Footer.vue";
-import AppHeader from "../layout/AppHeader.vue";
+import SearchHeader from "../layout/SearchHeader.vue";
 
 const page = ref(1); // 分页
 const list = ref([]);
 const loading = ref(true);
-const showTop = ref(false);
+const tab = ref(0);
+const keywords = ref("");
 
 const getData = () => {
     loading.value = true;
@@ -17,6 +18,17 @@ const getData = () => {
         console.log("page:",page.value)
         loading.value = false;
     },1500)
+}
+const search = ()=>{
+    page.value = 1;
+    list.value = [];
+    getData();
+}
+const submitSearch = ()=>{
+    if (keywords.value == "") {
+        return;
+    }
+    search();
 }
 
 onMounted(()=>{
@@ -38,10 +50,9 @@ const handleScroll = ()=> {
     }
 }
 
-
-// 监听宽度变化
-const onResize = ()=>{
-    // console.log(window.innerWidth)
+const changeTab = (item)=>{
+    tab.value = item.type;
+    search();
 }
 // 回到顶部
 const toTop = ()=>{
@@ -52,12 +63,25 @@ const toTop = ()=>{
 </script>
 
 <template>
-    <v-card  class="mx-auto primary " id="backTop"  v-resize="onResize" color="#ccc">
+    <v-card class="mx-auto primary body-color" id="backTop" >
         <v-layout>
-            <AppHeader></AppHeader>
-            <v-main class="mt-3" id="backTop">
+            <SearchHeader @changeTab="changeTab"></SearchHeader>
+            <v-main>
                 <!--视频列表-->
                 <v-container >
+                    <!--搜索-->
+                    <v-col cols="12" class="px-0 search-container">
+                        <div class="search">
+                            <input type="text" class="search-input" placeholder="请输入你的关键词，支持全文检索"
+                                   v-model="keywords"
+                                   @blur="submitSearch"
+                                   @keydown.enter="submitSearch"/>
+                            <div class="search-icon cursor-pointer" @click="submitSearch">
+                                <v-icon size="32">mdi-magnify</v-icon>
+                            </div>
+                        </div>
+                    </v-col>
+
                     <MovieList :list="list"></MovieList>
                     <!--加载动画-->
                     <v-col cols="12" class="text-center" v-show="loading">
@@ -72,20 +96,9 @@ const toTop = ()=>{
             </v-main>
         </v-layout>
     </v-card>
-    <!--到顶部 -->
-    <v-btn
-        v-if="showTop"
-        class="mx-3"
-        :bottom="true"
-        color="primary"
-        @click="toTop"
-        style="position: absolute;bottom: 60px;right: 30px;width: 50px;height: 60px;border-radius: 50%"
-    >
-        <v-icon>
-            mdi-format-vertical-align-top
-        </v-icon>
-    </v-btn>
 </template>
 <style lang="scss" scoped>
-
+.body-color{
+    background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 10%);
+}
 </style>

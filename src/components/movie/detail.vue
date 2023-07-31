@@ -132,7 +132,19 @@ const collect = (item)=>{
                                             <v-card-title class="px-0 text-one-line">{{ movie.vod_name }}</v-card-title>
                                         </div>
                                         <div>
-                                            <v-icon size="30" @click="collect()" :color="movie.collect !== null ? 'red':''">{{ movie.collect == null ? 'mdi-heart-outline':'mdi-heart'}}</v-icon>
+                                            <v-tooltip text="收藏">
+                                              <template v-slot:activator="{ props }">
+                                                  <v-icon
+                                                      v-bind="props"
+                                                      size="30"
+                                                      @click="collect()" :color="movie.collect !== null ? 'red':''">{{ movie.collect == null ? 'mdi-heart-outline':'mdi-heart'}}</v-icon>
+                                              </template>
+                                            </v-tooltip>
+                                            <v-tooltip text="加入追更" >
+                                                <template v-slot:activator="{ props }">
+                                                    <v-icon size="30" class="ml-2 cursor-pointer" v-bind="props">mdi-playlist-check</v-icon>
+                                                </template>
+                                            </v-tooltip>
                                         </div>
                                     </div>
                                     <div class="font-weight-light">{{ movie.vod_remarks }} | {{ movie.vod_year }} |
@@ -157,7 +169,13 @@ const collect = (item)=>{
                                                     </v-tab>
                                                 </v-tabs>
                                                 <div @click="backUp">
-                                                    <v-btn color="info">返回</v-btn>
+                                                    <v-tooltip text="返回列表">
+                                                      <template v-slot:activator="{ props }">
+                                                        <v-btn v-bind="props">
+                                                            <v-icon>mdi-arrow-left</v-icon>
+                                                        </v-btn>
+                                                      </template>
+                                                    </v-tooltip>
                                                 </div>
                                             </div>
                                         </div>

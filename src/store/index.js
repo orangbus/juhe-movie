@@ -157,3 +157,22 @@ export const useVideoStore = defineStore("videoStore", {
 		}
 	}
 })
+export const useSettingStore = defineStore("settingStore", {
+	state: () => {
+		return {
+			setting: {
+				pageStyle:1
+			},
+		}
+	},
+	actions:{
+		setPageStyle(type){
+			this.setting.pageStyle = type;
+			LocalStorage.set(EnumData.settingLabel,this.setting)
+		},
+		loadSetting(){
+			const setting = LocalStorage.get(EnumData.settingLabel);
+			LocalStorage.set(setting != null ? LocalStorage.set(EnumData.settingLabel,this.setting):EnumData.settingLabel,EnumData.setting);
+		}
+	}
+})

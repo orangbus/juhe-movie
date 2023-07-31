@@ -28,7 +28,6 @@ const toPage = (path="/")=>{
     <!--头部导航-->
     <v-app-bar
         color="primary"
-        density="compact"
         image="https://picsum.photos/1920/1080?random"
     >
         <template v-slot:image>

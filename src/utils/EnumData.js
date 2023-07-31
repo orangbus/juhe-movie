@@ -11,6 +11,15 @@ const EnumData = {
 
 	videoApiLabel: "video_api",
 
+	settingLabel: "setting",
+	setting:{
+		pageStyle:1, // 1
+	},
+	pageStyleList:[
+		{type:1,name:"滚动加载"},
+		{type:2,name:"分页加载"},
+	],
+
 
 	movieGrid:{
 		xl: 2, // 4K 和超宽屏幕

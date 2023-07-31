@@ -17,7 +17,7 @@ export default defineConfig({
   server:{
     proxy:{
       "/api":{
-        target: "http://movie.com/api",
+        target: "http://api.movie.com/api",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
       }

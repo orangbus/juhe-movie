@@ -33,7 +33,7 @@ import 'vuetify/styles'
 // 加载图标样式
 import "@mdi/font/css/materialdesignicons.css"
 import vuetify from './plugins/vuetify'
-import {useMovieStore, useUserStore, useWebsiteStore} from "./store/index.js";
+import {useMovieStore, useSettingStore, useUserStore, useWebsiteStore} from "./store/index.js";
 import LocalStorage from "./utils/LocalStorage.js";
 import EnumData from "./utils/EnumData.js";
 
@@ -66,4 +66,7 @@ const user = LocalStorage.get(EnumData.userLabel);
 if (user !== null){
 	userStore.setUser(user);
 }
+const settingStore = useSettingStore();
+settingStore.loadSetting();
+
 app.mount('#app')

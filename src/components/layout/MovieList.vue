@@ -2,11 +2,10 @@
 
 import EnumData from "../../utils/EnumData.js";
 
-import {defineProps, ref} from "vue";
+import {defineProps} from "vue";
 import router from "../../router/index.js";
 
 const props = defineProps(["list"]);
-// const postHeight = ref(250); // 封面图高度 350 250
 
 const toDetail = (item) => {
     router.push("/detail/" + item.id)

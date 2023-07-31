@@ -1,51 +1,49 @@
 <script setup>
 
-import AppHeader from "../layout/AppHeader.vue";
-import Footer from "../layout/Footer.vue";
-import {mock} from "../../mock/mock.js";
 import {onMounted, ref} from "vue";
-import router from "../../router/index.js";
 import UserHeader from "../layout/UserHeader.vue";
 import MovieList from "../layout/MovieList.vue";
+import {storeToRefs} from "pinia";
+import {useUserStore} from "../../store/index.js";
+import UserCenter from "./UserCenter.vue";
+import MyInviteList from "../common/MyInviteList.vue";
+import MyCollet from "../common/MyCollet.vue";
+import MyHistory from "../common/MyHistory.vue";
+import MySetting from "../common/MySetting.vue";
 
 const list = ref([]);
-const tab = ref("option-1");
+const tab = ref(5);
+
+const {user} = storeToRefs(useUserStore());
 
 const getData = () => {
-    setTimeout(function () {
-        list.value.push(...mock.mockMovieList);
-    },1500)
+
 }
 
 onMounted(()=>{
-    console.log("666")
-
     getData();
 })
+
+const changeTab = (item)=>{
+    tab.value = item.id;
+}
 </script>
 
 <template>
-    <v-card  class="mx-auto primary " id="backTop"  color="#ccc">
+    <v-card  class="mx-auto h-100" id="backTop">
         <v-layout>
             <!--头部导航-->
-           <UserHeader></UserHeader>
+           <UserHeader @changeTab="changeTab" :tab="tab"></UserHeader>
 
             <v-main class="mt-3">
-                <!--视频列表-->
                 <v-container >
-                    <v-row >
-                        <v-col cols="12">
-                            <v-window >
-                                <v-window-item value="option-1">
-                                    <v-card flat>
-                                        <v-card-text>
-                                            <movie-list :list="list"></movie-list>
-                                        </v-card-text>
-                                    </v-card>
-                                </v-window-item>
-                            </v-window>
-                        </v-col>
-                    </v-row>
+                    <!--个人中心-->
+                    <UserCenter v-if="tab === 1"></UserCenter>
+                    <MyCollet v-if="tab === 2"></MyCollet>
+                    <MyHistory v-if="tab === 3"></MyHistory>
+                    <!--我的邀请-->
+                    <MyInviteList v-if="tab === 4"></MyInviteList>
+                    <MySetting v-if="tab === 5"></MySetting>
                 </v-container>
             </v-main>
         </v-layout>
