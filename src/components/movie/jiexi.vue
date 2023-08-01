@@ -1,14 +1,14 @@
 <script setup>
-import {ref,onMounted} from "vue"
-import {mock} from "../../mock/mock.js"
+import {ref, onMounted} from "vue"
 import MovieList from "../layout/MovieList.vue";
 import Footer from "../layout/Footer.vue";
 import SearchHeader from "../layout/SearchHeader.vue";
+import snackbar from "../../utils/snackbar.js";
+import {jiexiList} from "../../api/index.js";
 
 const page = ref(1); // 分页
 const list = ref([]);
 const loading = ref(true);
-const showTop = ref(false);
 const gridLeft = ref({
     xl: 9, // 4K 和超宽屏幕
     lg: 9, // 桌面端
@@ -24,68 +24,113 @@ const gridRight = ref({
     xs: 12 // 小型号到大型号的手机
 })
 
+const preParse = ref({}); // 当前选择的解析
+const preParseUrl = ref("https://www.shankubf.com/m3u8/?url="); // 解析地址
+const inputUrl = ref("https://pptv.sd-play.com/202308/01/X59Y2Lpndu3/video/index.m3u8");
+const playerUrl = ref("");
+
+
 const getData = () => {
     loading.value = true;
-    setTimeout(function () {
-        list.value.push(...mock.mockMovieList);
-        console.log("page:",page.value)
+    jiexiList().then(res => {
         loading.value = false;
-    },1500)
+        if (res.code === 200) {
+            list.value = res.data;
+        } else {
+            snackbar.error(res.msg);
+        }
+    });
 }
 
-onMounted(()=>{
+onMounted(() => {
     getData();
 })
-// 回到顶部
-const toTop = ()=>{
-    document.body.scrollTop = 0;
-    document.getElementById("backTop").scrollTop = -100;
+
+const player = () => {
+    if (inputUrl.value === '') {
+        snackbar.info("请输入播放地址")
+        return false;
+    }
+    playerUrl.value = preParseUrl.value + inputUrl.value;
+}
+
+const changeParse = (item) => {
+    preParseUrl.value = item.url;
+    preParse.value = item;
+    if (inputUrl.value != '') {
+        playerUrl.value = preParseUrl.value + inputUrl.value;
+        snackbar.success(`已切换到${item.name}`);
+    }
 }
 
 </script>
 
 <template>
-    <v-card class="mx-auto primary body-color" id="backTop"  v-resize="onResize" >
+    <v-card class="mx-auto content-color" id="backTop">
         <v-layout>
             <SearchHeader :show="false"></SearchHeader>
             <v-main>
                 <!--视频列表-->
-                <v-container >
+                <v-container>
                     <v-row>
                         <!--搜索-->
                         <v-col cols="12" class="px-0 search-container">
                             <div class="search">
                                 <input type="text" class="search-input" placeholder="请输入视频地址"
-                                       v-model="keywords"
-                                       @blur="search"
-                                       @keydown.enter="search"/>
-                                <div class="search-icon cursor-pointer" @click="search">
+                                       v-model="inputUrl"
+                                       @blur="player"
+                                       @keydown.enter="player"/>
+                                <div class="search-icon cursor-pointer" @click="player">
                                     <v-icon size="32">mdi-play</v-icon>
                                 </div>
                             </div>
                         </v-col>
 
-                        <v-col cols="9" class="px-0" v-bind="gridLeft">
+                        <v-col cols="12" class="px-0 pt-0" v-bind="gridLeft" v-show="playerUrl !== ''">
                             <div>
                                 <iframe
                                     class="movie-player"
                                     allowfullscreen
                                     :allowtransparency="true"
-                                    src="http://dummyimage.com/373x238.png/120c2c/441d43"
+                                    :src="playerUrl"
                                 ></iframe>
                             </div>
                         </v-col>
-                        <v-col cols="3" v-bind="gridRight">
+                        <v-col cols="12" v-bind="gridRight" class="pr-0 pt-0" v-show="playerUrl !== ''">
                             <v-card class="jiexi-list">
                                 <v-card-text>
-                                    <v-chip-group class="justify-space-between">
-                                        <v-col cols="3" v-for="(item,index) in 100" :key="index">
-                                            <v-chip label="" >{{ index}}解析</v-chip>
+                                    <div class="d-flex flex-wrap justify-space-between">
+                                        <v-col cols="3" v-for="(item,index) in list" :key="index"
+                                               @click="changeParse(item)">
+                                            <v-hover>
+                                                <template v-slot:default="{ isHovering, props }">
+                                                    <span class="cursor-pointer">
+                                                        <v-chip
+                                                            v-bind="props"
+                                                            :color="isHovering || preParse.id === item.id ? 'primary' : undefined"
+                                                            :label="item.name">{{ item.name }}
+                                                    </v-chip>
+                                                    </span>
+                                                </template>
+                                            </v-hover>
                                         </v-col>
-                                    </v-chip-group>
+                                    </div>
                                 </v-card-text>
                             </v-card>
                         </v-col>
+                    </v-row>
+                    <v-row  v-show="playerUrl === ''">
+                        <v-alert
+                            class="mb-5"
+                          title="如何使用"
+                        >
+                            <div class="pt-3">
+                                <div>1、打开各大视频网站,如 <a href="https://v.qq.com" target="_blank">腾讯视频</a></div>
+                                <div>
+                                    2、如果是需要会员才能观看的视频，直接复制当前播放的地址，粘贴到上面的输入框中，点击播放即可。
+                                </div>
+                            </div>
+                        </v-alert>
                     </v-row>
                 </v-container>
                 <Footer></Footer>
@@ -94,10 +139,7 @@ const toTop = ()=>{
     </v-card>
 </template>
 <style lang="scss" scoped>
-.body-color{
-    background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 10%);
-}
-.jiexi-list{
+.jiexi-list {
     max-height: 700px;
     overflow-y: scroll;
 }

@@ -20,7 +20,6 @@ const EnumData = {
 		{type:2,name:"分页加载"},
 	],
 
-
 	movieGrid:{
 		xl: 2, // 4K 和超宽屏幕
 		lg: 2, // 桌面端

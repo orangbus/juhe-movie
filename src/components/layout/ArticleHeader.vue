@@ -3,8 +3,9 @@ import {ref} from "vue";
 import router from "../../router/index.js";
 import AppMenu from "./AppMenu.vue";
 import {useWebsiteStore} from "../../store/index.js";
+import {storeToRefs} from "pinia";
 
-const website = useWebsiteStore();
+const {website} = storeToRefs(useWebsiteStore());
 
 const drawer = ref(false);
 const toPage = (path="/")=>{
@@ -30,8 +31,7 @@ const toPage = (path="/")=>{
             <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
         </template>
 
-        <v-app-bar-title class="cursor-pointer" @click="toPage">{{ website.name }}</v-app-bar-title>
-
+        <v-app-bar-title class="cursor-pointer" @click="toPage()">{{ website.name }}</v-app-bar-title>
         <v-spacer></v-spacer>
 
         <v-btn icon @click="toPage('/user')">

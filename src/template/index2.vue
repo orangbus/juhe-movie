@@ -3,42 +3,20 @@ import {ref,onMounted} from "vue"
 import {mock} from "../../mock/mock.js"
 import MovieList from "../layout/MovieList.vue";
 import Footer from "../layout/Footer.vue";
-import SearchHeader from "../layout/SearchHeader.vue";
-import {movieSearch} from "../../api/movie.js";
-import snackbar from "../../utils/snackbar.js";
+import AppHeader from "../layout/AppHeader.vue";
 
-const page = ref(1);
-const total = ref(0);
+const page = ref(1); // 分页
 const list = ref([]);
 const loading = ref(true);
-const tab = ref(0);
-const keywords = ref("");
+const showTop = ref(false);
+
 const getData = () => {
     loading.value = true;
-    movieSearch({
-        page:page.value,
-        vod_name: keywords.value,
-        type: tab.value
-    }).then(res=>{
+    setTimeout(function () {
+        list.value.push(...mock.mockMovieList);
+        console.log("page:",page.value)
         loading.value = false;
-        if (res.code === 200){
-            list.value.push(...res.data);
-            total.value = res.total;
-        }else{
-            snackbar.error(res.msg);
-        }
-    });
-}
-const search = ()=>{
-    page.value = 1;
-    list.value = [];
-    getData();
-}
-const submitSearch = ()=>{
-    if (keywords.value == "") {
-        return;
-    }
-    search();
+    },1500)
 }
 
 onMounted(()=>{
@@ -55,43 +33,31 @@ const handleScroll = ()=> {
     const scrollHeight = document.documentElement.scrollHeight;
     // 判断是否滚动到页面底部（偏移值设为 50px）
     if (scrollHeight - (scrollTop + clientHeight) < 50 && !loading.value) {
-        loading.value = true;
         page.value +=1;
         getData();
     }
 }
 
-const changeTab = (item)=>{
-    tab.value = item.type;
-    search();
+
+// 监听宽度变化
+const onResize = ()=>{
+    // console.log(window.innerWidth)
 }
 // 回到顶部
 const toTop = ()=>{
     document.body.scrollTop = 0;
     document.getElementById("backTop").scrollTop = -100;
 }
+
 </script>
 
 <template>
-    <v-card class="mx-auto content-color" id="backTop" >
+    <v-card  class="mx-auto primary " id="backTop"  v-resize="onResize" color="#ccc">
         <v-layout>
-            <SearchHeader @changeTab="changeTab"></SearchHeader>
-            <v-main>
+            <AppHeader></AppHeader>
+            <v-main class="mt-3" id="backTop">
                 <!--视频列表-->
                 <v-container >
-                    <!--搜索-->
-                    <v-col cols="12" class="px-0 search-container">
-                        <div class="search">
-                            <input type="text" class="search-input" placeholder="请输入你的关键词，支持全文检索"
-                                   v-model="keywords"
-                                   @blur="submitSearch"
-                                   @keydown.enter="submitSearch"/>
-                            <div class="search-icon cursor-pointer" @click="submitSearch">
-                                <v-icon size="32">mdi-magnify</v-icon>
-                            </div>
-                        </div>
-                    </v-col>
-
                     <MovieList :list="list"></MovieList>
                     <!--加载动画-->
                     <v-col cols="12" class="text-center" v-show="loading">
@@ -106,6 +72,20 @@ const toTop = ()=>{
             </v-main>
         </v-layout>
     </v-card>
+    <!--到顶部 -->
+    <v-btn
+        v-if="showTop"
+        class="mx-3"
+        :bottom="true"
+        color="primary"
+        @click="toTop"
+        style="position: absolute;bottom: 60px;right: 30px;width: 50px;height: 60px;border-radius: 50%"
+    >
+        <v-icon>
+            mdi-format-vertical-align-top
+        </v-icon>
+    </v-btn>
 </template>
 <style lang="scss" scoped>
+
 </style>

@@ -49,7 +49,7 @@ const toPage = (path="/")=>{
             <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
         </template>
         <v-app-bar-title class="cursor-pointer" @click="toPage()">{{ website.name }}</v-app-bar-title>
-
+        <v-spacer></v-spacer>
         <v-btn icon @click="toPage('/user')">
             <v-icon>mdi-account-circle</v-icon>
         </v-btn>

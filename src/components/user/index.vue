@@ -28,7 +28,7 @@ const toTop = () => {
 </script>
 
 <template>
-    <v-card  class="mx-auto" id="backTop">
+    <v-card  class="mx-auto content-color" id="backTop" style="height: 100vh;">
         <v-layout>
             <!--头部导航-->
            <UserHeader @changeTab="changeTab" :tab="tab"></UserHeader>

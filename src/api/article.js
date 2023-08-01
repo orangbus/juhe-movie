@@ -4,11 +4,6 @@ import axios from "axios";
 
 function baseUrl(url="") {
 	return "/api/article/" + url;
-	// if (app_debug){
-	// 	return "/api/article/" + url;
-	// }else{
-	// 	return "/" + url;
-	// }
 }
 
 /**
@@ -18,6 +13,10 @@ function baseUrl(url="") {
  */
 export function articleList(params = {}) {
 	return axios.get(baseUrl("list"), {params});
+}
+
+export function articleDetail(id=0) {
+	return axios.get(baseUrl("detail/"+id) );
 }
 
 /**

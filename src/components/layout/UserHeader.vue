@@ -51,7 +51,7 @@ const logout = ()=>{
             <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
         </template>
         <v-app-bar-title class="cursor-pointer" @click="toPage()">{{ website.name }}</v-app-bar-title>
-
+        <v-spacer></v-spacer>
 
         <v-tooltip text="聚合搜索">
             <template v-slot:activator="{ props }">

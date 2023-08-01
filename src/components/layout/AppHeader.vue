@@ -43,29 +43,14 @@ const toPage = (path="/")=>{
             <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
         </template>
         <v-app-bar-title class="cursor-pointer">{{ website.name }}</v-app-bar-title>
+        <v-spacer></v-spacer>
 
         <v-btn icon @click="toPage('/search')">
             <v-icon>mdi-magnify</v-icon>
         </v-btn>
-        <!--<v-btn icon @click="toPage('/user')">-->
-        <!--    <v-icon>mdi-history</v-icon>-->
-        <!--</v-btn>-->
-
-        <!--<v-btn icon @click="toPage('/user')">-->
-        <!--    <v-icon>mdi-heart</v-icon>-->
-        <!--</v-btn>-->
-        <!--<v-btn icon @click="toPage('/user')">-->
-        <!--    <v-icon>mdi-heart</v-icon>-->
-        <!--</v-btn>-->
-
         <MovieApiBtn @changeApi="changeApi"></MovieApiBtn>
-
         <v-btn icon @click="toPage('/user')">
             <v-icon>mdi-account-circle</v-icon>
-        </v-btn>
-
-        <v-btn icon>
-            <v-icon>mdi-dots-vertical</v-icon>
         </v-btn>
 
         <template v-slot:extension>

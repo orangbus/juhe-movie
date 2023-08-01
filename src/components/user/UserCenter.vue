@@ -4,6 +4,7 @@ import {storeToRefs} from "pinia";
 import {useUserStore} from "../../store/index.js";
 import MovieToday from "../common/MovieToday.vue";
 import {ref} from "vue";
+import MyQrCode from "../common/MyQrCode.vue";
 const {user} = storeToRefs(useUserStore());
 
 const grid = ref({
@@ -41,7 +42,8 @@ const grid = ref({
                         <div>
                             <v-tooltip location="top" text="邀请码">
                                 <template v-slot:activator="{ props }">
-                                    <v-icon size="32" v-bind="props">mdi-qrcode</v-icon>
+                                    <MyQrCode></MyQrCode>
+                                    <!--<v-icon size="32" v-bind="props">mdi-qrcode</v-icon>-->
                                 </template>
                             </v-tooltip>
                         </div>
@@ -49,14 +51,6 @@ const grid = ref({
                 </v-card-text>
             </v-card>
         </v-col>
-        <!--<v-col cols="12" v-bind="grid">-->
-        <!--    <v-card>-->
-        <!--        <v-card-title>{{user.name}}</v-card-title>-->
-        <!--        <v-card-text>-->
-        <!--            <view>{{ user.phone }}</view>-->
-        <!--        </v-card-text>-->
-        <!--    </v-card>-->
-        <!--</v-col>-->
         <MovieToday></MovieToday>
     </v-row>
 </template>

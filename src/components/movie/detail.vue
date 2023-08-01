@@ -1,10 +1,10 @@
 <script setup>
-import {ref, onMounted} from "vue"
+import {ref, onMounted, onActivated} from "vue"
 import MovieList from "../layout/MovieList.vue";
 import Footer from "../layout/Footer.vue";
 import DetailHeader from "../layout/DetailHeader.vue";
 import router from "../../router/index.js";
-import {movieCollectStore, movieDetail} from "../../api/movie.js";
+import {movieCollectStore, movieDetail, movieToday} from "../../api/movie.js";
 import MovieUtil from "../../utils/MovieUtil.js";
 import snackbar from "../../utils/snackbar.js";
 
@@ -79,7 +79,8 @@ const startPlay = (url="")=>{
     }
 }
 
-onMounted(() => {
+
+onActivated(()=>{
     id.value = router.currentRoute.value.params.id;
     getData();
 })
@@ -102,6 +103,16 @@ const collect = (item)=>{
             }
         }else{
             snackbar.error(res.msg)
+        }
+    })
+}
+
+const addToday = ()=>{
+    movieToday({id:movie.value.id}).then(res=>{
+        if (res.code === 200){
+            snackbar.success(res.msg);
+        }else{
+            snackbar.error(res.msg);
         }
     })
 }
@@ -145,7 +156,12 @@ const collect = (item)=>{
                                             </v-tooltip>
                                             <v-tooltip text="加入追更" >
                                                 <template v-slot:activator="{ props }">
-                                                    <v-icon size="30" class="ml-2 cursor-pointer" v-bind="props">mdi-playlist-check</v-icon>
+                                                    <v-icon
+                                                        size="30"
+                                                        class="ml-2 cursor-pointer"
+                                                        v-bind="props"
+                                                        @click="addToday()"
+                                                    >mdi-playlist-check</v-icon>
                                                 </template>
                                             </v-tooltip>
                                         </div>
