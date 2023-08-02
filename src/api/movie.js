@@ -96,7 +96,7 @@ export function movieFavoriteClear(params = {}) {
 /**
  * 追番
  */
-export function movieToday(params = {}) {
+export function movieToday(params = {id:0}) {
 	return axios.post(baseUrl("today"), params);
 }
 export function movieTodayList(params = {}) {

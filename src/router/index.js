@@ -97,13 +97,22 @@ const routes = [
 			transition: 'slide-left' // 动画效果
 		}
 	},
-
 	{
 		path:"/login",
 		name: "login",
 		component:()=>import("../components/login/index.vue"),
 		meta:{
 			keepAlive: true,
+			required: false,
+			transition: 'slide-bottom' // 动画效果
+		}
+	},
+	{
+		path:"/demo",
+		name: "demo",
+		component:()=>import("../components/template/index.vue"),
+		meta:{
+			keepAlive: false,
 			required: false,
 			transition: 'slide-bottom' // 动画效果
 		}

@@ -123,7 +123,7 @@ const changeCate = (item) => {
 </script>
 
 <template>
-    <v-card class="mx-auto primary " id="backTop" color="#ccc">
+    <v-card class="mx-auto content-color" id="backTop">
         <v-layout>
             <AppHeader @changeTab="changeTab" @changeApi="changeApi"></AppHeader>
             <v-main>
@@ -167,5 +167,7 @@ const changeCate = (item) => {
     </v-card>
 </template>
 <style lang="scss" scoped>
+.content-color{
 
+}
 </style>

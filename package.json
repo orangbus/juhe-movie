@@ -12,6 +12,7 @@
     "axios": "^1.4.0",
     "file-saver": "^2.0.5",
     "pinia": "^2.1.6",
+    "qrcode.vue": "^3.4.0",
     "viewerjs": "^1.11.4",
     "vue": "^3.3.4",
     "vue-clipboard3": "^2.0.0",
