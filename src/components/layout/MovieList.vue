@@ -2,13 +2,26 @@
 
 import EnumData from "../../utils/EnumData.js";
 
-import {defineProps} from "vue";
+import {defineProps, ref} from "vue";
 import router from "../../router/index.js";
+const detail = ref(false);
 
-const props = defineProps(["list"]);
+const props = defineProps(["list","detail"]);
+if (props.detail != undefined){
+    detail.value = props.detail;
+}
+
+const emit = defineEmits(["player"])
+const player = (movie)=>{
+    emit("player",movie);
+}
 
 const toDetail = (item) => {
-    router.push("/detail/" + item.id)
+    if (props.detail){
+        player(item);
+    }else{
+        router.push("/detail/" + item.id)
+    }
 }
 
 </script>

@@ -1,10 +1,10 @@
 <script setup>
-import {ref, onMounted} from "vue"
+import {ref, onMounted, onActivated} from "vue"
 import MovieList from "../layout/MovieList.vue";
 import Footer from "../layout/Footer.vue";
 import DetailHeader from "../layout/DetailHeader.vue";
 import router from "../../router/index.js";
-import {movieCollectStore, movieDetail} from "../../api/movie.js";
+import {movieCollectStore, movieDetail, movieToday} from "../../api/movie.js";
 import MovieUtil from "../../utils/MovieUtil.js";
 import snackbar from "../../utils/snackbar.js";
 import {storeToRefs} from "pinia";
@@ -28,6 +28,7 @@ const urlIndex = ref(0); // 播放索引
 const apiInfo = ref({});
 const movieStore = useMovieStore();
 
+
 const getData = () => {
     loading.value = true;
     movieDetail(id.value).then(res => {
@@ -38,29 +39,38 @@ const getData = () => {
                 preParseUrl.value = api.parse_url;
             }
             movie.value = info;
-            list.value = res.data.list;
             apiInfo.value = api;
+            initPlayerInfo(movie.value);
 
-            // 解析地址
-            movieUrlList.value = MovieUtil.transformUrl(movie.value)
-            movieUrls.value = movieUrlList.value[cateIndex.value].list;
-
-                // 提取第一个播放地址
-            movieUrls.value[0].selected = true; // 设置第一个播放地址选中
-
-            // 开始播放
-            startPlay(movieUrls.value[0].url);
-
-            // 设置下载链接
-            movieUrlList.value.forEach(item=>{
-                if (item.name.includes("m3u8")){
-                    downloadList.value = item.list;
-                }
-            })
-            console.log(downloadList.value)
-            
+            setTimeout(function () {
+                list.value = res.data.list;
+            },1000)
         }
     });
+}
+// 初始化播放信息
+const initPlayerInfo = (movieInfo)=>{
+    movie.value = movieInfo;
+    // 解析地址
+    movieUrlList.value = MovieUtil.transformUrl(movieInfo)
+    movieUrls.value = movieUrlList.value[cateIndex.value].list;
+
+    // 提取第一个播放地址
+    movieUrls.value[0].selected = true; // 设置第一个播放地址选中
+    // 开始播放
+    startPlay(movieUrls.value[0].url);
+
+    // 设置下载链接
+    movieUrlList.value.forEach(item=>{
+        if (item.name.includes("m3u8")){
+            downloadList.value = item.list;
+        }
+    })
+    toTop();
+}
+
+const player = (item)=>{
+    initPlayerInfo(item)
 }
 
 // 切换分类
@@ -96,13 +106,17 @@ const startPlay = (url="")=>{
     }
 }
 
-onMounted(() => {
+// onMounted(() => {
+//     id.value = router.currentRoute.value.params.id;
+//     getData();
+// })
+onActivated(()=>{
     id.value = router.currentRoute.value.params.id;
     getData();
 })
 
+
 const backUp = ()=>{
-    // router.push({path:"/"})
     window.history.back(-1);
 }
 const collect = (item)=>{
@@ -122,6 +136,16 @@ const collect = (item)=>{
         }
     })
 }
+const addMy = ()=>{
+        movieToday({id:movie.value.id}).then(res=>{
+            if (res.code === 200){
+                snackbar.success(res.msg);
+            }else{
+                snackbar.error(res.msg);
+            }
+        });
+}
+
 // 设置默认源
 const setDefault=()=>{
     if (apiInfo.value != null){
@@ -131,15 +155,39 @@ const setDefault=()=>{
         snackbar.warning("当前接口已过期或者不存在");
     }
 }
+const toTop = ()=>{
+    document.body.scrollTop = 0;
+    document.getElementById("backTop").scrollTop = 0;
+}
 </script>
 
 <template>
     <v-card class="mx-auto primary " id="backTop" color="#ccc">
         <v-layout>
             <DetailHeader></DetailHeader>
-            <v-main id="backTop">
+            <v-main>
+                <!--加载动画-->
+                <v-dialog
+                    v-model="loading"
+                    :scrim="false"
+                    persistent
+                    width="auto"
+                >
+                    <v-card
+                        color="primary"
+                    >
+                        <v-card-text>
+                           加载中，请稍后。。。
+                            <v-progress-linear
+                                indeterminate
+                                color="white"
+                                class="mb-0"
+                            ></v-progress-linear>
+                        </v-card-text>
+                    </v-card>
+                </v-dialog>
                 <!--视频列表-->
-                <v-container class="container px-1 py-2">
+                <v-container v-if="!loading" class="container px-1 py-2">
                     <v-row>
                         <v-col
                             class=" p-0"
@@ -171,7 +219,7 @@ const setDefault=()=>{
                                         </v-tooltip>
                                         <v-tooltip text="加入追更" location="top">
                                             <template v-slot:activator="{ props }">
-                                                <v-icon size="35" class="ml-2 cursor-pointer" v-bind="props">mdi-playlist-check</v-icon>
+                                                <v-icon size="35" class="ml-2 cursor-pointer" v-bind="props" @click="addMy">mdi-playlist-check</v-icon>
                                             </template>
                                         </v-tooltip>
                                         <v-tooltip text="设置默认数据源" location="top">
@@ -179,7 +227,7 @@ const setDefault=()=>{
                                                 <v-icon
                                                     v-bind="props"
                                                     size="35"
-                                                    @click="setDefault()" >mdi-account-settings</v-icon>
+                                                    @click="setDefault()" >mdi-cog-refresh</v-icon>
                                             </template>
                                         </v-tooltip>
                                         <v-tooltip text="下载" location="top">
@@ -227,7 +275,7 @@ const setDefault=()=>{
                             <div></div>
                         </v-col>
                     </v-row>
-                    <MovieList :list="list"></MovieList>
+                    <MovieList v-if="list.length > 0" :list="list" :detail="true" @player="player"></MovieList>
                 </v-container>
                 <Footer></Footer>
             </v-main>
