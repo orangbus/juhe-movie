@@ -7,6 +7,9 @@ import router from "../../router/index.js";
 import {movieCollectStore, movieDetail} from "../../api/movie.js";
 import MovieUtil from "../../utils/MovieUtil.js";
 import snackbar from "../../utils/snackbar.js";
+import {storeToRefs} from "pinia";
+import {useMovieStore} from "../../store/index.js";
+import MovieDownload from "../common/MovieDownload.vue";
 
 const id = ref(0);
 const loading = ref(true);
@@ -17,9 +20,13 @@ const preParseUrl = ref("https://www.gszyv.com/m3u8/?url="); // 当前视频对�
 const playerUrl = ref(""); // 当前播放的url地址
 const movieUrlList = ref([]); // 播放分类
 const movieUrls = ref([]); // 播放分类下面的播放url
+const downloadList = ref([]); // 下载链接
 
 const cateIndex = ref(0); // 分类索引
 const urlIndex = ref(0); // 播放索引
+
+const apiInfo = ref({});
+const movieStore = useMovieStore();
 
 const getData = () => {
     loading.value = true;
@@ -32,16 +39,26 @@ const getData = () => {
             }
             movie.value = info;
             list.value = res.data.list;
+            apiInfo.value = api;
 
             // 解析地址
             movieUrlList.value = MovieUtil.transformUrl(movie.value)
             movieUrls.value = movieUrlList.value[cateIndex.value].list;
 
-            // 提取第一个播放地址
+                // 提取第一个播放地址
             movieUrls.value[0].selected = true; // 设置第一个播放地址选中
 
             // 开始播放
             startPlay(movieUrls.value[0].url);
+
+            // 设置下载链接
+            movieUrlList.value.forEach(item=>{
+                if (item.name.includes("m3u8")){
+                    downloadList.value = item.list;
+                }
+            })
+            console.log(downloadList.value)
+            
         }
     });
 }
@@ -105,7 +122,15 @@ const collect = (item)=>{
         }
     })
 }
-
+// 设置默认源
+const setDefault=()=>{
+    if (apiInfo.value != null){
+        movieStore.setMovieApi(apiInfo.value);
+        snackbar.success("设置成功，可能需要刷新浏览器生效");
+    }else{
+        snackbar.warning("当前接口已过期或者不存在");
+    }
+}
 </script>
 
 <template>
@@ -127,35 +152,44 @@ const collect = (item)=>{
                             ></iframe>
                         </v-col>
                         <v-col cols="12" class="p-0" sm="12" xs="12" md="12" lg="3" >
-                            <!--<v-card height="700px" :style="`background-image: url('${movie.vod_pic}');background-size: cover;background-position: center；position: relative`">-->
                             <v-card :height="height" style="background-color: #f5f5f5">
                                 <v-card-text>
-                                    <div class="d-flex justify-space-between align-center">
-                                        <div>
-                                            <v-card-title class="px-0 text-one-line">{{ movie.vod_name }}</v-card-title>
-                                        </div>
-                                        <div>
-                                            <v-tooltip text="收藏">
-                                              <template v-slot:activator="{ props }">
-                                                  <v-icon
-                                                      v-bind="props"
-                                                      size="30"
-                                                      @click="collect()" :color="movie.collect !== null ? 'red':''">{{ movie.collect == null ? 'mdi-heart-outline':'mdi-heart'}}</v-icon>
-                                              </template>
-                                            </v-tooltip>
-                                            <v-tooltip text="加入追更" >
-                                                <template v-slot:activator="{ props }">
-                                                    <v-icon size="30" class="ml-2 cursor-pointer" v-bind="props">mdi-playlist-check</v-icon>
-                                                </template>
-                                            </v-tooltip>
-                                        </div>
-                                    </div>
+                                    <v-card-title class="px-0 text-one-line">{{ movie.vod_name }}</v-card-title>
                                     <div class="font-weight-light">{{ movie.vod_remarks }} | {{ movie.vod_year }} |
                                         {{ movie.vod_tag }}
                                     </div>
                                     <div class="font-weight-light">{{ movie.vod_actor }}</div>
                                     <div class="font-weight-light text-five-line" v-html="movie.vod_content"></div>
-                                    <div class="mt-3">
+                                    <div class="d-flex justify-space-between mt-3">
+                                        <v-tooltip text="收藏" location="top">
+                                            <template v-slot:activator="{ props }">
+                                                <v-icon
+                                                    v-bind="props"
+                                                    size="35"
+                                                    @click="collect()" :color="movie.collect !== null ? 'red':''">{{ movie.collect == null ? 'mdi-heart-outline':'mdi-heart'}}</v-icon>
+                                            </template>
+                                        </v-tooltip>
+                                        <v-tooltip text="加入追更" location="top">
+                                            <template v-slot:activator="{ props }">
+                                                <v-icon size="35" class="ml-2 cursor-pointer" v-bind="props">mdi-playlist-check</v-icon>
+                                            </template>
+                                        </v-tooltip>
+                                        <v-tooltip text="设置默认数据源" location="top">
+                                            <template v-slot:activator="{ props }">
+                                                <v-icon
+                                                    v-bind="props"
+                                                    size="35"
+                                                    @click="setDefault()" >mdi-account-settings</v-icon>
+                                            </template>
+                                        </v-tooltip>
+                                        <v-tooltip text="下载" location="top">
+                                            <template v-slot:activator="{ props }">
+                                                <MovieDownload v-bind="props" :movie="movie" :downloadList="downloadList"/>
+                                            </template>
+                                        </v-tooltip>
+                                    </div>
+                                    <v-divider class="mt-3" />
+                                    <div>
                                         <div>
                                             <div class="d-flex justify-space-between align-center">
                                                 <v-tabs
@@ -172,13 +206,9 @@ const collect = (item)=>{
                                                     </v-tab>
                                                 </v-tabs>
                                                 <div @click="backUp">
-                                                    <v-tooltip text="返回列表">
-                                                      <template v-slot:activator="{ props }">
-                                                        <v-btn v-bind="props">
-                                                            <v-icon>mdi-arrow-left</v-icon>
-                                                        </v-btn>
-                                                      </template>
-                                                    </v-tooltip>
+                                                    <v-btn v-bind="props">
+                                                        <v-icon>mdi-arrow-left</v-icon>
+                                                    </v-btn>
                                                 </div>
                                             </div>
                                         </div>
