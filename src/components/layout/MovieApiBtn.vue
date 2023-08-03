@@ -1,6 +1,6 @@
 <script setup>
 import {ref} from "vue";
-import {useMovieStore} from "../../store/index.js";
+import {useMovieStore, useUserStore} from "../../store/index.js";
 import {storeToRefs} from "pinia";
 import snackbar from "../../utils/snackbar.js";
 
@@ -12,6 +12,7 @@ const title = ref("请选择视频接口")
 const type = ref(0) // 视频类型
 const list = ref(movieApiList.value) // 视频类型
 const api = ref(movieApi);
+const {user} = storeToRefs(useUserStore());
 
 const update = ()=>{
     movieStore.getMovieApiList();
@@ -67,7 +68,7 @@ const confirm = ()=>{
             <v-card-title>{{ title }}</v-card-title>
             <v-divider></v-divider>
             <v-card-text style="height: 500px;">
-                <v-tabs align-tabs="center">
+                <v-tabs align-tabs="center" v-if="user.vip === 1">
                     <v-tab @click="changeType(0)">全部</v-tab>
                     <v-tab @click="changeType(1)">免费</v-tab>
                     <v-tab @click="changeType(2)">会员</v-tab>

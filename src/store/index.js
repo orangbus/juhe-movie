@@ -21,6 +21,12 @@ export const useUserStore = defineStore("userStore",{
 		userLogOut(){
 			this.user = null;
 			this.auth = false;
+			// 清空接口地址
+			LocalStorage.remove(EnumData.movieApiListLabel)
+			// 清空用户选择的接口
+			LocalStorage.remove(EnumData.movieApiLabel)
+			// 重置设置
+			LocalStorage.set(EnumData.setting,EnumData.setting)
 
 			router.push({
 				path:"/login"
@@ -167,18 +173,30 @@ export const useSettingStore = defineStore("settingStore", {
 	state: () => {
 		return {
 			setting: {
-				pageStyle:1
+				pageStyle:1,
+				playType: 1,
 			},
 		}
 	},
 	actions:{
+		// 设置分页方式
 		setPageStyle(type){
 			this.setting.pageStyle = type;
 			LocalStorage.set(EnumData.settingLabel,this.setting)
 		},
+		// 设置播放方式
+		setPlayType(type){
+			this.setting.playType = type;
+			LocalStorage.set(EnumData.settingLabel,this.setting)
+		},
+		// 加载默认配置
 		loadSetting(){
-			const setting = LocalStorage.get(EnumData.settingLabel);
-			LocalStorage.set(setting != null ? LocalStorage.set(EnumData.settingLabel,this.setting):EnumData.settingLabel,EnumData.setting);
+			let setting = LocalStorage.get(EnumData.settingLabel);
+			if (setting === null){
+				setting = EnumData.setting
+			}
+			this.setting = setting;
+			LocalStorage.set(EnumData.settingLabel,EnumData.setting);
 		}
 	}
 })

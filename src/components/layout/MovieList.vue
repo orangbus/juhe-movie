@@ -4,7 +4,14 @@ import EnumData from "../../utils/EnumData.js";
 
 import {defineProps, ref} from "vue";
 import router from "../../router/index.js";
+import {storeToRefs} from "pinia";
+import {useSettingStore} from "../../store/index.js";
+import MoviePlayer from "../common/MoviePlayer.vue";
 const detail = ref(false);
+
+const movie = ref({});
+const show = ref(false);
+const {setting} = storeToRefs(useSettingStore());
 
 const props = defineProps(["list","detail"]);
 if (props.detail != undefined){
@@ -17,7 +24,10 @@ const player = (movie)=>{
 }
 
 const toDetail = (item) => {
-    if (props.detail){
+    if (setting.value.playType === EnumData.playTypeDialog){
+        movie.value = item;
+        show.value = true;
+    }else if (props.detail){
         player(item);
     }else{
         router.push("/detail/" + item.id)
@@ -72,6 +82,25 @@ const toDetail = (item) => {
                 </v-card>
             </v-hover>
         </v-col>
+        <v-dialog
+            v-model="show"
+            transition="dialog-bottom-transition"
+            max-width="1200"
+            :scrollable="true"
+            close-delay="0.5"
+          >
+            <template v-slot:default="{ isActive }">
+              <v-card class="p-0 m-0">
+                <v-toolbar
+                  color="primary"
+                  :title="movie.vod_name"
+                ></v-toolbar>
+                <v-card-text class="p-0 m-0">
+                    <MoviePlayer v-if="isActive" :movie="movie"></MoviePlayer>
+                </v-card-text>
+              </v-card>
+            </template>
+          </v-dialog>
     </v-row>
 </template>
 
@@ -81,7 +110,6 @@ const toDetail = (item) => {
 }
 .movie-type {
     text-align: right;
-
     span {
         background-color: rgba(0, 0, 0, .4);
         border-radius: 3px;

@@ -13,6 +13,11 @@ const changePageStyle = (number)=>{
     snackbar.success("设置成功，可能需要刷新页面后才能正常显示");
 }
 
+const changePlayType = (number)=>{
+    settingStore.setPlayType(number);
+    snackbar.success("设置成功");
+}
+
 const grid = ref({
     xl: 3, // 4K 和超宽屏幕
     lg: 3, // 桌面端
@@ -34,6 +39,21 @@ const grid = ref({
                         @update:model-value="changePageStyle">
                         <v-radio
                             v-for="(item,index) in EnumData.pageStyleList" :key="index"
+                            :label="item.name" :value="item.type"></v-radio>
+                    </v-radio-group>
+                </v-card-text>
+            </v-card>
+        </v-col>
+        <v-col cols="12" v-bind="grid">
+            <v-card>
+                <v-card-title align="center">播放设置</v-card-title>
+                <v-divider></v-divider>
+                <v-card-text>
+                    <v-radio-group
+                        v-model="setting.playType"
+                        @update:model-value="changePlayType">
+                        <v-radio
+                            v-for="(item,index) in EnumData.playTypeList" :key="index"
                             :label="item.name" :value="item.type"></v-radio>
                     </v-radio-group>
                 </v-card-text>

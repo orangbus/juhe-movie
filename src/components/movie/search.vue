@@ -32,6 +32,7 @@ const getData = () => {
 const search = ()=>{
     page.value = 1;
     list.value = [];
+    toTop();
     getData();
 }
 const submitSearch = ()=>{

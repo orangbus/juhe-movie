@@ -66,6 +66,7 @@ const search = () => {
     page.value = 1;
     loading.value = true;
     list.value = [];
+    toTop();
     getData()
 }
 
@@ -112,6 +113,7 @@ const changeApi = () => {
     type.value = 0;
     cateList.value = [];
     typeId.value = 0;
+    toTop();
     search();
     getMovieCate()
 }

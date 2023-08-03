@@ -1,7 +1,7 @@
 <script setup>
 
 import MovieList from "../layout/MovieList.vue";
-import {onActivated, ref} from "vue";
+import {onActivated, onMounted, ref} from "vue";
 import {movieTodayList} from "../../api/movie.js";
 const loading = ref(true);
 const type = ref(1); // 1、0
@@ -16,6 +16,10 @@ const getData = ()=>{
         }
     })
 }
+
+onMounted(()=>{
+    getData();
+})
 onActivated(()=>{
     getData();
 })

@@ -2,23 +2,29 @@
 
 import {ref} from "vue";
 import router from "../../router/index.js";
+import {storeToRefs} from "pinia";
+import {useUserStore} from "../../store/index.js";
+const {user} = storeToRefs(useUserStore());
 
 const props= defineProps(["drawer"])
 const menuList = ref([
     {
         icon: "mdi-high-definition-box",
         name: "视频",
-        path: "/video"
+        path: "/video",
+        is_vip: user.vip === 1,
     },
     {
         icon: "mdi-play-circle",
         name: "解析",
-        path: "/jiexi"
+        path: "/jiexi",
+        is_vip: false,
     },
     {
         icon: "mdi-format-list-text",
         name: "文章",
-        path: "/article"
+        path: "/article",
+        is_vip: false,
     }
 ]);
 
@@ -46,6 +52,7 @@ const toPage = (path="/")=>{
                 v-for="(item,index) in menuList"
                 :key="index"
                 @click="toPage(item.path)"
+                v-show="!item.is_vip"
             ></v-list-item>
         </v-list>
     </v-navigation-drawer>

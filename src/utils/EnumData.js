@@ -14,10 +14,16 @@ const EnumData = {
 	settingLabel: "setting",
 	setting:{
 		pageStyle:1, // 1
+		playType: 1,
 	},
 	pageStyleList:[
 		{type:1,name:"滚动加载"},
 		{type:2,name:"分页加载"},
+	],
+	playTypeDialog: 2,
+	playTypeList:[
+		{type:1,name:"详情"},
+		{type:2,name:"弹窗"},
 	],
 
 	movieGrid:{

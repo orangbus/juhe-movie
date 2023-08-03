@@ -26,7 +26,7 @@ const gridRight = ref({
 
 const preParse = ref({}); // 当前选择的解析
 const preParseUrl = ref("https://www.shankubf.com/m3u8/?url="); // 解析地址
-const inputUrl = ref("https://pptv.sd-play.com/202308/01/X59Y2Lpndu3/video/index.m3u8");
+const inputUrl = ref("");
 const playerUrl = ref("");
 
 

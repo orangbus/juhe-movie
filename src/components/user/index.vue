@@ -28,7 +28,7 @@ const toTop = () => {
 </script>
 
 <template>
-    <v-card  class="mx-auto content-color" id="backTop" style="height: 100vh;">
+    <v-card  class="mx-auto content-color user" id="backTop" >
         <v-layout>
             <!--头部导航-->
            <UserHeader @changeTab="changeTab" :tab="tab"></UserHeader>
@@ -49,5 +49,8 @@ const toTop = () => {
 </template>
 
 <style scoped lang="scss">
-
+.user{
+    height: 100vh;
+    overflow-y: scroll;
+}
 </style>
