@@ -1,13 +1,7 @@
 import axios from "axios";
 
-const app_debug = process.env.VUE_APP_DEBUG;
-
 function baseUrl(url="") {
-	if (app_debug){
-		return "/api/coupon/" + url;
-	}else{
-		return "/" + url;
-	}
+	return "/api/coupon/" + url;
 }
 
 /**

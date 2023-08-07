@@ -4,6 +4,7 @@ import router from "../../router/index.js";
 import {useUserStore, useWebsiteStore} from "../../store/index.js";
 import AppMenu from "./AppMenu.vue";
 import {storeToRefs} from "pinia";
+import ActivitonCode from "../common/ActivitonCode.vue";
 
 const userStore  = useUserStore();
 const {user} = storeToRefs(userStore);
@@ -61,13 +62,15 @@ const logout = ()=>{
             </template>
         </v-tooltip>
 
-        <v-tooltip text="激活码">
-            <template v-slot:activator="{ props }">
-                <v-btn icon @click="logout" v-bind="props">
-                    <v-icon>mdi-ticket-percent-outline</v-icon>
-                </v-btn>
-            </template>
-        </v-tooltip>
+        <ActivitonCode></ActivitonCode>
+
+        <!--<v-tooltip text="激活码">-->
+        <!--    <template v-slot:activator="{ props }">-->
+        <!--        <v-btn icon @click="logout" v-bind="props">-->
+        <!--            <v-icon>mdi-ticket-percent-outline</v-icon>-->
+        <!--        </v-btn>-->
+        <!--    </template>-->
+        <!--</v-tooltip>-->
         <v-tooltip text="退出登录">
             <template v-slot:activator="{ props }">
                 <v-btn icon @click="logout" v-bind="props">

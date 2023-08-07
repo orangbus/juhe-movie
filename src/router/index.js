@@ -108,8 +108,8 @@ const routes = [
 		}
 	},
 	{
-		path:"/demo",
-		name: "demo",
+		path:"/template",
+		name: "template",
 		component:()=>import("../components/template/index.vue"),
 		meta:{
 			keepAlive: false,
