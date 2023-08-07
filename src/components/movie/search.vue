@@ -46,17 +46,20 @@ onMounted(()=>{
     getData();
     window.addEventListener("scroll",handleScroll);
 })
-const handleScroll = ()=> {
+const container = ref(null);
+const handleScroll = () => {
     // 获取滚动位置
-    const scrollTop =
-        window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+    const scrollTop =container.value.scrollTop;
     // 获取可视区域高度
-    const clientHeight = window.innerHeight || document.documentElement.clientHeight;
+    const clientHeight = container.value.clientHeight;
     // 获取页面内容的高度
-    const scrollHeight = document.documentElement.scrollHeight;
+    const scrollHeight = container.value.scrollHeight;
+    if (scrollTop > clientHeight){
+        showTop.value = true;
+    }
+
     // 判断是否滚动到页面底部（偏移值设为 50px）
     if (scrollHeight - (scrollTop + clientHeight) < 50 && !loading.value) {
-        loading.value = true;
         page.value +=1;
         getData();
     }
@@ -67,44 +70,63 @@ const changeTab = (item)=>{
     search();
 }
 // 回到顶部
+const showTop = ref(false);
 const toTop = ()=>{
-    document.body.scrollTop = 0;
-    document.getElementById("backTop").scrollTop = -100;
+    document.getElementById("backTop").scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
 }
 </script>
 
 <template>
-    <v-card class="mx-auto content-color" id="backTop" >
+    <v-card class="mx-auto content-color">
         <v-layout>
-            <SearchHeader @changeTab="changeTab"></SearchHeader>
-            <v-main>
-                <!--视频列表-->
-                <v-container >
-                    <!--搜索-->
-                    <v-col cols="12" class="px-0 search-container">
-                        <div class="search">
-                            <input type="text" class="search-input" placeholder="请输入你的关键词，支持全文检索"
-                                   v-model="keywords"
-                                   @blur="submitSearch"
-                                   @keydown.enter="submitSearch"/>
-                            <div class="search-icon cursor-pointer" @click="submitSearch">
-                                <v-icon size="32">mdi-magnify</v-icon>
-                            </div>
-                        </div>
-                    </v-col>
+            <v-app>
+                <SearchHeader @changeTab="changeTab"></SearchHeader>
+                <v-main scrollable="true">
+                    <div class="main" id="backTop" ref="container" @scroll="handleScroll">
+                        <!--视频列表-->
+                        <v-container >
+                            <!--搜索-->
+                            <v-col cols="12" class="px-0 search-container">
+                                <div class="search">
+                                    <input type="text" class="search-input" placeholder="请输入你的关键词，支持全文检索"
+                                           v-model="keywords"
+                                           @blur="submitSearch"
+                                           @keydown.enter="submitSearch"/>
+                                    <div class="search-icon cursor-pointer" @click="submitSearch">
+                                        <v-icon size="32">mdi-magnify</v-icon>
+                                    </div>
+                                </div>
+                            </v-col>
 
-                    <MovieList :list="list"></MovieList>
-                    <!--加载动画-->
-                    <v-col cols="12" class="text-center" v-show="loading">
-                        <v-progress-circular
-                            indeterminate
+                            <MovieList :list="list"></MovieList>
+                            <!--加载动画-->
+                            <v-col cols="12" class="text-center" v-show="loading">
+                                <v-progress-circular
+                                    indeterminate
+                                    color="primary"
+                                ></v-progress-circular>
+                            </v-col>
+                        </v-container>
+
+                        <Footer></Footer>
+                        <v-btn
+                            v-if="showTop"
+                            class="mx-3"
+                            :bottom="true"
                             color="primary"
-                        ></v-progress-circular>
-                    </v-col>
-                </v-container>
-
-                <Footer></Footer>
-            </v-main>
+                            @click="toTop"
+                            style="position: absolute;bottom: 60px;right: 30px;width: 50px;height: 60px;border-radius: 50%"
+                        >
+                            <v-icon size="25">
+                                mdi-format-vertical-align-top
+                            </v-icon>
+                        </v-btn>
+                    </div>
+                </v-main>
+            </v-app>
         </v-layout>
     </v-card>
 </template>

@@ -42,7 +42,7 @@ const toPage = (path="/")=>{
         <template v-slot:prepend>
             <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
         </template>
-        <v-app-bar-title class="cursor-pointer">{{ website.name }}</v-app-bar-title>
+        <v-app-bar-title class="cursor-pointer" @click="toPage()">{{ website.name }}</v-app-bar-title>
         <v-spacer></v-spacer>
 
         <v-btn icon @click="toPage('/search')">

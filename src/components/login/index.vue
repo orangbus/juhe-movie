@@ -9,6 +9,7 @@ import LocalStorage from "../../utils/LocalStorage.js";
 import {storeToRefs} from "pinia";
 
 const phone = ref("");
+const name = ref("");
 const password = ref("");
 const loading = ref(false);
 const is_login = ref(true);
@@ -25,7 +26,7 @@ const submitLogin = () => {
     if (password.value == ""){
         return snackbar.warning("请输入密码");
     }
-    if (is_login){
+    if (!is_login){
         loading.value = true;
         login({
             phone:phone.value,
@@ -162,23 +163,23 @@ const openMenu = () => {
                     </v-row>
                 </v-container>
 
-                <v-footer class="bg-primary text-black" style="position: absolute;bottom: 0px;width: 100%;">
-                    <v-row justify="center" no-gutters>
-                        <v-btn
-                            v-for="link in links"
-                            :key="link"
-                            color="white"
-                            variant="text "
-                            class="mx-2 text-black"
-                            rounded="xl"
-                        >
-                            {{ link.name }}
-                        </v-btn>
-                        <v-col class="text-center mt-4 text-white" cols="12">
-                            {{ new Date().getFullYear() }} — <strong>以上资源来自网络爬虫，如何侵犯你的权益，请联系站长删除相关内容，谢谢！</strong>
-                        </v-col>
-                    </v-row>
-                </v-footer>
+                <!--<v-footer class="bg-primary text-black" style="position: absolute;bottom: 0px;width: 100%;">-->
+                <!--    <v-row justify="center" no-gutters>-->
+                <!--        <v-btn-->
+                <!--            v-for="link in links"-->
+                <!--            :key="link"-->
+                <!--            color="white"-->
+                <!--            variant="text "-->
+                <!--            class="mx-2 text-black"-->
+                <!--            rounded="xl"-->
+                <!--        >-->
+                <!--            {{ link.name }}-->
+                <!--        </v-btn>-->
+                <!--        <v-col class="text-center mt-4 text-white" cols="12">-->
+                <!--            {{ new Date().getFullYear() }} — <strong>以上资源来自网络爬虫，如何侵犯你的权益，请联系站长删除相关内容，谢谢！</strong>-->
+                <!--        </v-col>-->
+                <!--    </v-row>-->
+                <!--</v-footer>-->
             </v-main>
         </v-layout>
     </v-card>

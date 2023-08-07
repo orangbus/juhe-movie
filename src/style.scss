@@ -1,15 +1,31 @@
-.content-color{
+.content-color {
   background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 10%) !important;
 }
-.cursor-pointer{
+
+.cursor-pointer {
   cursor: pointer;
 }
 
-.text-one-line{
+.main {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.top-btn {
+  position: absolute;
+  bottom: 60px;
+  right: 30px;
+  width: 50px;
+  height: 60px;
+  border-radius: 50%
+}
+
+.text-one-line {
   white-space: nowrap; /* 文本不换行 */
   overflow: hidden; /* 超出一行的部分隐藏 */
   text-overflow: ellipsis; /* 超出部分显示省略号 */
 }
+
 .text-two-line {
   display: -webkit-box;
   overflow: hidden;
@@ -40,9 +56,9 @@
   text-overflow: ellipsis;
 }
 
-.movie-container{
+.movie-container {
 
-  @media screen and (max-width: 600px){
+  @media screen and (max-width: 600px) {
     max-height: 400px;
     min-height: 350px;
   }
@@ -60,12 +76,12 @@
   }
 }
 
-.movie-player{
+.movie-player {
   width: 100%;
   border-radius: 5px;
   border: none;
 
-  @media screen and (max-width: 600px){
+  @media screen and (max-width: 600px) {
     max-height: 400px;
     min-height: 350px;
   }

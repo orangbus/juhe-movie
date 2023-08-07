@@ -26,12 +26,12 @@ const menuList = ref([
         path: "/article",
         is_vip: false,
     },
-    {
-        icon: "mdi-format-list-text",
-        name: "测试页面",
-        path: "/template",
-        is_vip: false,
-    }
+    // {
+    //     icon: "mdi-format-list-text",
+    //     name: "测试页面",
+    //     path: "/template",
+    //     is_vip: false,
+    // }
 ]);
 
 const toPage = (path="/")=>{

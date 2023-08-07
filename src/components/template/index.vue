@@ -7,7 +7,6 @@ import AppHeader from "../layout/AppHeader.vue";
 import QrcodeVue from "qrcode.vue";
 import {storeToRefs} from "pinia";
 import {useWebsiteStore} from "../../store/index.js";
-import ActivitonCode from "../common/ActivitonCode.vue";
 const {website} = storeToRefs(useWebsiteStore());
 
 const page = ref(1); // 分页
@@ -61,19 +60,23 @@ const show = ref(true);
 </script>
 
 <template>
-        <v-card  class="mx-auto content-color " >
-            <v-layout>
-                <v-app>
-
+    <v-card  class="mx-auto  " >
+        <v-layout>
+            <v-app>
                 <AppHeader></AppHeader>
                 <v-main scrollable="true">
                     <div class="container" id="backTop" ref="container" @scroll="handleScroll">
                         <!--视频列表-->
                         <v-container>
                             <v-row>
-<ActivitonCode></ActivitonCode>
-
-
+                                <v-col cols="2" v-for="(item,index) in list" :key="index">
+                                    <v-card>
+                                        <v-img :src="item.vod_pic"></v-img>
+                                        <v-card-title>
+                                            {{ item.vod_name}}
+                                        </v-card-title>
+                                    </v-card>
+                                </v-col>
                             </v-row>
 
                             <!--加载动画-->
@@ -101,9 +104,10 @@ const show = ref(true);
                         </v-btn>
                     </div>
                 </v-main>
-                </v-app>
-            </v-layout>
-        </v-card>
+            </v-app>
+
+        </v-layout>
+    </v-card>
 </template>
 <style lang="scss" scoped>
 .container {

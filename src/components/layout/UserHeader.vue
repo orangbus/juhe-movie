@@ -56,7 +56,7 @@ const logout = ()=>{
 
         <v-tooltip text="聚合搜索">
             <template v-slot:activator="{ props }">
-                <v-btn icon @click="logout" v-bind="props">
+                <v-btn icon @click="toPage('/search')" v-bind="props">
                     <v-icon>mdi-magnify</v-icon>
                 </v-btn>
             </template>
@@ -64,13 +64,6 @@ const logout = ()=>{
 
         <ActivitonCode></ActivitonCode>
 
-        <!--<v-tooltip text="激活码">-->
-        <!--    <template v-slot:activator="{ props }">-->
-        <!--        <v-btn icon @click="logout" v-bind="props">-->
-        <!--            <v-icon>mdi-ticket-percent-outline</v-icon>-->
-        <!--        </v-btn>-->
-        <!--    </template>-->
-        <!--</v-tooltip>-->
         <v-tooltip text="退出登录">
             <template v-slot:activator="{ props }">
                 <v-btn icon @click="logout" v-bind="props">
