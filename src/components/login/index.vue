@@ -18,15 +18,18 @@ const items = ref(["登录","注册"])
 
 const userStore = useUserStore();
 const {links} = storeToRefs(useWebsiteStore());
+const {website} = storeToRefs(useWebsiteStore());
 
 const submitLogin = () => {
+    console.log(is_login.value)
+    
     if (phone.value == ""){
         return snackbar.warning("请输入手机号");
     }
     if (password.value == ""){
         return snackbar.warning("请输入密码");
     }
-    if (!is_login){
+    if (is_login.value){
         loading.value = true;
         login({
             phone:phone.value,
@@ -94,7 +97,7 @@ const openMenu = () => {
                 <template v-slot:prepend>
                     <v-app-bar-nav-icon @click="openMenu"></v-app-bar-nav-icon>
                 </template>
-                <v-app-bar-title>聚合影视</v-app-bar-title>
+                <v-app-bar-title>{{ website.name }}</v-app-bar-title>
                 <v-spacer></v-spacer>
 
                 <template v-slot:extension>

@@ -4,11 +4,24 @@ import EnumData from "../../utils/EnumData.js";
 
 import {defineProps, ref} from "vue";
 import router from "../../router/index.js";
+const is_detail = ref(false);
 
-const props = defineProps(["list"]);
+const props = defineProps(["list","is_detail"]);
+if (props.is_detail != undefined){
+    is_detail.value = props.is_detail;
+}
+
+const emit = defineEmits(["changeVideo"]);
+const changeVideo = (item)=>{
+    emit("changeVideo",item)
+}
 
 const toDetail = (item) => {
-    router.push("/video/" + item.id)
+    if (is_detail.value){
+        changeVideo(item);
+    }else{
+        router.push({path:"/video/" + item.id})
+    }
 }
 
 </script>

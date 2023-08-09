@@ -129,7 +129,7 @@ const router = createRouter({
 
 router.beforeEach(async (to,from,next)=>{
 	const token = LocalStorage.get(EnumData.tokenLabel);
-	if (to.meta.required || token === null){
+	if (to.meta.required && token === null){
 		if (to.name != "login"){
 			next({
 				path:"/login"

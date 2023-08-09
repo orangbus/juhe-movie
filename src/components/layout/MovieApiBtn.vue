@@ -11,8 +11,11 @@ const dialog = ref(false)
 const title = ref("请选择视频接口")
 const type = ref(0) // 视频类型
 const list = ref(movieApiList.value) // 视频类型
-const api = ref(movieApi);
+const api = ref({id:0});
 const {user} = storeToRefs(useUserStore());
+if (movieApi.value != null){
+    api.value = movieApi.value;
+}
 
 const update = ()=>{
     movieStore.getMovieApiList();

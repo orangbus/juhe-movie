@@ -57,9 +57,7 @@ if (movieApiList== null){
 	movie.setMovieApiList(movieApiList)
 }
 // 加载已经选择的列表
-if (movieApi !== null){
-	movie.setMovieApi(movieApi)
-}
+movie.setMovieApi(movieApi)
 
 const userStore = useUserStore();
 const user = LocalStorage.get(EnumData.userLabel);

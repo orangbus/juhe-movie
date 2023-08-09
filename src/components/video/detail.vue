@@ -1,9 +1,8 @@
 <script setup>
 import VideoHeader from "../layout/VideoHeader.vue";
-import {onMounted, ref} from "vue";
+import {onActivated, ref} from "vue";
 import Footer from "../layout/Footer.vue";
-import snackbar from "../../utils/snackbar.js";
-import {videoApiList, videoDetail, videoList} from "../../api/video.js";
+import { videoDetail} from "../../api/video.js";
 import {useVideoStore} from "../../store/index.js";
 import VideoDataList from "../layout/VideoDataList.vue";
 import router from "../../router/index.js";
@@ -36,15 +35,20 @@ const getData = () => {
     })
 }
 const search = () => {
-    page.value = 1;
     list.value = [];
     getData();
 }
 
-onMounted(() => {
+onActivated(()=>{
     id.value = router.currentRoute.value.params.id;
     getData();
 })
+
+// 切换视频
+const changeVideo = (item)=>{
+    id.value = item.id;
+    search();
+}
 
 const backUp = ()=>{
     router.push({path:"/video"})
@@ -57,8 +61,28 @@ const backUp = ()=>{
         <v-layout>
             <VideoHeader :show="false"></VideoHeader>
             <v-main class="mt-3" id="backTop">
+                <!--加载动画-->
+                <v-dialog
+                    v-model="loading"
+                    :scrim="false"
+                    persistent
+                    width="auto"
+                >
+                    <v-card
+                        color="primary"
+                    >
+                        <v-card-text>
+                            加载中，请稍后。。。
+                            <v-progress-linear
+                                indeterminate
+                                color="white"
+                                class="mb-0"
+                            ></v-progress-linear>
+                        </v-card-text>
+                    </v-card>
+                </v-dialog>
                 <!--视频列表-->
-                <v-container>
+                <v-container v-if="!loading">
                     <v-row>
                         <v-col
                             class=" p-0"
@@ -77,21 +101,6 @@ const backUp = ()=>{
                                         <div>
                                             <v-card-title class="px-0 ">{{ video.vod_title }}</v-card-title>
                                         </div>
-                                        <!--<div>-->
-                                        <!--    <v-tooltip text="收藏">-->
-                                        <!--        <template v-slot:activator="{ props }">-->
-                                        <!--            <v-icon-->
-                                        <!--                v-bind="props"-->
-                                        <!--                size="30"-->
-                                        <!--                @click="collect()" :color="video.collect !== null ? 'red':''">{{ video.collect == null ? 'mdi-heart-outline':'mdi-heart'}}</v-icon>-->
-                                        <!--        </template>-->
-                                        <!--    </v-tooltip>-->
-                                        <!--    <v-tooltip text="加入追更" >-->
-                                        <!--        <template v-slot:activator="{ props }">-->
-                                        <!--            <v-icon size="30" class="ml-2 cursor-pointer" v-bind="props">mdi-playlist-check</v-icon>-->
-                                        <!--        </template>-->
-                                        <!--    </v-tooltip>-->
-                                        <!--</div>-->
                                     </div>
                                     <div class="font-weight-light">
                                         <span>{{ video.category }}</span>
@@ -117,7 +126,7 @@ const backUp = ()=>{
                         </v-col>
                     </v-row>
 
-                    <VideoDataList :list="list"></VideoDataList>
+                    <VideoDataList :list="list" :is_detail="true" @changeVideo="changeVideo"></VideoDataList>
                 </v-container>
                 <Footer></Footer>
             </v-main>

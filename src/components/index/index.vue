@@ -24,7 +24,7 @@ const {auth} = storeToRefs(useUserStore());
 const getMovieCate = () => {
     // 用户的呢牢固，并且选择了其它接口
     let api =null;
-    if (auth.value != null && movieApi.value != null) {
+    if (movieApi.value != null) {
         api = movieCate({api_id:movieApi.value.id});
     }else{
         api = freeMovieCate();
