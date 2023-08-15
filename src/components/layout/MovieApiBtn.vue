@@ -17,6 +17,11 @@ if (movieApi.value != null){
     api.value = movieApi.value;
 }
 
+const show = ()=>{
+    movieStore.getMovieApiList();
+    dialog.value = true;
+}
+
 const update = ()=>{
     movieStore.getMovieApiList();
     snackbar.success("更新成功");
@@ -46,7 +51,7 @@ const changeApi = (item)=>{
 
 const emit = defineEmits(["changeApi"])
 const confirm = ()=>{
-    movieStore.setMovieApi(movieApi.value);
+    movieStore.setMovieApi(api.value);
     dialog.value = false;
     emit("changeApi");
 }
@@ -63,6 +68,7 @@ const confirm = ()=>{
             <v-btn
                 icon
                 v-bind="props"
+                @click="show"
             >
                 <v-icon>mdi-format-list-bulleted</v-icon>
             </v-btn>
@@ -84,7 +90,6 @@ const confirm = ()=>{
                         @click="changeApi(item)"
                         :title="item.name"
                     >
-                        <!--v-if="item.default === 1"-->
                         <template v-slot:prepend >
                             <v-avatar v-if="item.id === api.id">
                                 <v-icon >mdi-arrow-right</v-icon>

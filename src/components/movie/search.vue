@@ -1,5 +1,5 @@
 <script setup>
-import {ref,onMounted} from "vue"
+import {ref, onMounted, onActivated} from "vue"
 import {mock} from "../../mock/mock.js"
 import MovieList from "../layout/MovieList.vue";
 import Footer from "../layout/Footer.vue";
@@ -13,67 +13,77 @@ const list = ref([]);
 const loading = ref(true);
 const tab = ref(0);
 const keywords = ref("");
+
+const container = ref(null);
+const scrollTop = ref(0);
+const clientHeight = ref(0);
+const scrollHeight = ref(0);
+
 const getData = () => {
     loading.value = true;
     movieSearch({
-        page:page.value,
+        page: page.value,
         vod_name: keywords.value,
         type: tab.value
-    }).then(res=>{
+    }).then(res => {
         loading.value = false;
-        if (res.code === 200){
+        if (res.code === 200) {
             list.value.push(...res.data);
             total.value = res.total;
-        }else{
+        } else {
             snackbar.error(res.msg);
         }
     });
 }
-const search = ()=>{
+const search = () => {
     page.value = 1;
     list.value = [];
     toTop();
     getData();
 }
-const submitSearch = ()=>{
+const submitSearch = () => {
     if (keywords.value == "") {
         return;
     }
     search();
 }
 
-onMounted(()=>{
+onMounted(() => {
     getData();
-    window.addEventListener("scroll",handleScroll);
 })
-const container = ref(null);
+
+onActivated(() => {
+    if (scrollTop.value > clientHeight.value) {
+        document.getElementById("backTop").scrollTo({
+            top: scrollTop.value,
+        });
+    }
+})
 const handleScroll = () => {
     // 获取滚动位置
-    const scrollTop =container.value.scrollTop;
+    scrollTop.value = container.value.scrollTop;
     // 获取可视区域高度
-    const clientHeight = container.value.clientHeight;
+    clientHeight.value = container.value.clientHeight;
     // 获取页面内容的高度
-    const scrollHeight = container.value.scrollHeight;
-    if (scrollTop > clientHeight){
-        showTop.value = true;
-    }
+    scrollHeight.value = container.value.scrollHeight;
+    showTop.value = scrollTop.value > clientHeight.value;
 
     // 判断是否滚动到页面底部（偏移值设为 50px）
-    if (scrollHeight - (scrollTop + clientHeight) < 50 && !loading.value) {
-        page.value +=1;
+    if (scrollHeight.value - (scrollTop.value + clientHeight.value) < 50 && !loading.value) {
+        page.value += 1;
         getData();
     }
 }
 
-const changeTab = (item)=>{
+const changeTab = (item) => {
     tab.value = item.type;
     search();
 }
 // 回到顶部
 const showTop = ref(false);
-const toTop = ()=>{
+const toTop = () => {
     document.getElementById("backTop").scrollTo({
-        top: 0,
+        top: 100,
         behavior: "smooth"
     });
 }
@@ -84,10 +94,10 @@ const toTop = ()=>{
         <v-layout>
             <v-app>
                 <SearchHeader @changeTab="changeTab"></SearchHeader>
-                <v-main scrollable="true">
+                <v-main :scrollable="true">
                     <div class="main" id="backTop" ref="container" @scroll="handleScroll">
                         <!--视频列表-->
-                        <v-container >
+                        <v-container>
                             <!--搜索-->
                             <v-col cols="12" class="px-0 search-container">
                                 <div class="search">

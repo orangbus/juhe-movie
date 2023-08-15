@@ -1,6 +1,6 @@
 <script setup>
 import VideoHeader from "../layout/VideoHeader.vue";
-import {onMounted, ref} from "vue";
+import {onActivated, onMounted, ref} from "vue";
 import Footer from "../layout/Footer.vue";
 import snackbar from "../../utils/snackbar.js";
 import {videoApiList, videoList} from "../../api/video.js";
@@ -43,6 +43,10 @@ const resetData = ()=>{
     getData();
 }
 
+const container = ref(null);
+const scrollTop = ref(0);
+const clientHeight = ref(0);
+const scrollHeight = ref(0);
 onMounted(()=>{
     videoApiList().then(res=>{
         if (res.code === 200){
@@ -59,24 +63,30 @@ onMounted(()=>{
     })
     window.addEventListener("scroll",handleScroll);
 })
-const container = ref(null);
+
+onActivated(() => {
+    if (scrollTop.value > clientHeight.value) {
+        document.getElementById("backTop").scrollTo({
+            top: scrollTop.value,
+        });
+    }
+})
 const handleScroll = () => {
     // 获取滚动位置
-    const scrollTop =container.value.scrollTop;
+    scrollTop.value = container.value.scrollTop;
     // 获取可视区域高度
-    const clientHeight = container.value.clientHeight;
+    clientHeight.value = container.value.clientHeight;
     // 获取页面内容的高度
-    const scrollHeight = container.value.scrollHeight;
-    if (scrollTop > clientHeight){
-        showTop.value = true;
-    }
+    scrollHeight.value = container.value.scrollHeight;
+    showTop.value = scrollTop.value > clientHeight.value;
 
     // 判断是否滚动到页面底部（偏移值设为 50px）
-    if (scrollHeight - (scrollTop + clientHeight) < 50 && !loading.value) {
-        page.value +=1;
+    if (scrollHeight.value - (scrollTop.value + clientHeight.value) < 50 && !loading.value) {
+        page.value += 1;
         getData();
     }
 }
+
 const changeTab = (item,index)=>{
         api_id.value = item.id;
         cid.value = 0;
