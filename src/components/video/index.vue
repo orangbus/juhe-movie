@@ -61,7 +61,6 @@ onMounted(()=>{
             snackbar.error(res.msg);
         }
     })
-    window.addEventListener("scroll",handleScroll);
 })
 
 onActivated(() => {
@@ -118,7 +117,7 @@ const toTop = ()=>{
                         <!--视频列表-->
                         <v-container >
                             <!--分类-->
-                            <v-row style="overflow-y: scroll" v-if="cateList.length > 0">
+                            <v-row style="overflow-y: scroll;" v-if="cateList.length > 0">
                                 <v-col cols="12" class="d-flex">
                             <span v-ripple class="mr-2 cursor-pointer " v-for="(item,index) in cateList" :key="index"
                                   @click="changeCate(item)">
