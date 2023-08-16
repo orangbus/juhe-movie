@@ -1,11 +1,9 @@
 <script setup>
-import {ref, onMounted, onActivated} from "vue"
-import {mock} from "../../mock/mock.js"
-import MovieList from "../layout/MovieList.vue";
+import {ref, onActivated} from "vue"
 import Footer from "../layout/Footer.vue";
 import ArticleHeader from "../layout/ArticleHeader.vue";
 import router from "../../router/index.js";
-import {articleDetail, articleList} from "../../api/article.js";
+import {articleDetail} from "../../api/article.js";
 import snackbar from "../../utils/snackbar.js";
 
 const id = ref(0);
@@ -40,10 +38,10 @@ const toDetail = (item)=>{
 </script>
 
 <template>
-    <v-card  class="mx-auto primary " id="backTop"  color="#ccc">
+    <v-card  class="mx-auto primary " id="backTop">
         <v-layout>
             <ArticleHeader></ArticleHeader>
-            <v-main class="mt-0" id="backTop">
+            <v-main class="content-color" id="backTop">
                 <!--视频列表-->
                 <v-container>
                     <v-row>

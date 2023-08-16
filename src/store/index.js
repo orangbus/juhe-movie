@@ -2,7 +2,7 @@ import {defineStore} from "pinia";
 import router from "../router/index.js";
 import LocalStorage from "../utils/LocalStorage.js";
 import EnumData from "../utils/EnumData.js";
-import {website} from "../api/index.js";
+import {friendList, website} from "../api/index.js";
 import {movieApiList} from "../api/movie.js";
 import { videoApiList} from "../api/video.js";
 
@@ -110,10 +110,10 @@ export const useWebsiteStore = defineStore("websiteStore", {
 				url: "http://localhost"
 			},
 			links:[
-				{name:'OrangBus',url: ""},
-				{name:'券满多',url: ""},
-				{name:'Github',url: ""},
-				{name:'电报交流群',url: ""},
+				{name:'OrangBus',url: "https://orangbus.cn"},
+				{name:'券满多',url: "http://ktyks.yhzu.cn/"},
+				{name:'Github',url: "https://github.com/orangbus"},
+				{name:'电报交流群',url: "https://t.me/+FOho4eXM_9gXnd0y "},
 			],
 		}
 	},
@@ -121,7 +121,7 @@ export const useWebsiteStore = defineStore("websiteStore", {
 		getWebsite(){
 			const that = this;
 			website().then(res=>{
-				let {code,data} = res.data;
+				let {code,data} = res;
 				if (code === 200){
 					that.website = data;
 					LocalStorage.set(EnumData.websiteLabel,data)
@@ -134,6 +134,23 @@ export const useWebsiteStore = defineStore("websiteStore", {
 				this.website = website;
 			}else{
 				this.getWebsite();
+			}
+		},
+		getFriendLink(){
+			let that = this;
+			friendList().then(res=>{
+				if (res.code === 200 && res.data != null){
+					that.links = res.data;
+					LocalStorage.set(EnumData.friendLabel,res.data);
+				}
+			});
+		},
+		loadFriendList(){
+			const friend = LocalStorage.get(EnumData.friendLabel);
+			if (friend != null){
+				this.links = friend;
+			}else{
+				this.getFriendLink();
 			}
 		}
 	}

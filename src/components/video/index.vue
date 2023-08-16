@@ -108,12 +108,12 @@ const toTop = ()=>{
 </script>
 
 <template>
-    <v-card  class="mx-auto primary bg-color">
+    <v-card  class="mx-auto primary">
         <v-layout>
             <v-app>
                 <VideoHeader @changeTab="changeTab"></VideoHeader>
                 <v-main scrollable="true">
-                    <div class="main" id="backTop" ref="container" @scroll="handleScroll">
+                    <div class="main  content-color" id="backTop" ref="container" @scroll="handleScroll">
                         <!--视频列表-->
                         <v-container >
                             <!--分类-->
@@ -170,38 +170,5 @@ const toTop = ()=>{
 </template>
 
 <style scoped lang="scss">
-.search-container {
-    position: sticky;
 
-    .search {
-        position: relative;
-        padding-left: 0;
-        padding-right: 0;
-
-        .search-input {
-            width: 100%;
-            height: 50px;
-            background-color: white;
-            opacity: 0.5;
-            border: none;
-            outline: none;
-            padding: 10px 10px 10px 15px;
-            border-radius: 5px;
-        }
-
-        .search-icon {
-            position: absolute;
-            right: 0;
-            top: 0;
-            background-color: red;
-            width: 100px;
-            height: 100%;
-            color: white;
-            border-radius: 0px 5px 5px 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-    }
-}
 </style>

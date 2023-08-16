@@ -1,6 +1,7 @@
 <script>
 import { defineComponent } from "vue";
-
+import LocalStorage from "./utils/LocalStorage.js";
+import EnumData from "./utils/EnumData.js";
 
 export default defineComponent({
     name: "App",
@@ -11,6 +12,16 @@ export default defineComponent({
                     route.meta && route.meta.keepalive
                 })
                 .map((route)=>route.name)
+        }
+    },
+    // 用户关闭窗口的时候执行
+    beforeUnmount() {
+        window.removeEventListener("beforeunload",this.clearCache);
+    },
+    methods:{
+        clearCache(){
+            LocalStorage.remove(EnumData.websiteLabel);
+            LocalStorage.remove(EnumData.friendLabel);
         }
     }
 })
@@ -23,22 +34,3 @@ export default defineComponent({
         </keep-alive>
     </router-view>
 </template>
-
-<!--<style scoped>-->
-/* 滚动槽 */
-//::-webkit-scrollbar {
-//    width: 5px;
-//    height: 6px;
-//}
-//::-webkit-scrollbar-track {
-//    border-radius: 10px;
-//    background: rgba(0,0,0,0.06);
-//    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.08);
-//}
-/*!* 滚动条滑块 *!*/
-/*::-webkit-scrollbar-thumb {*/
-/*    border-radius: 3px;*/
-/*    background: rgba(0,0,0,0.12);*/
-/*    -webkit-box-shadow: inset 0 0 10px rgba(0,0,0,0.2);*/
-//}
-<!--</style>-->

@@ -65,10 +65,10 @@ const toTop = ()=>{
 </script>
 
 <template>
-    <v-card  class="mx-auto primary " id="backTop" color="#ccc">
+    <v-card  class="mx-auto primary " id="backTop">
         <v-layout>
             <ArticleHeader></ArticleHeader>
-            <v-main class="mt-3" id="backTop">
+            <v-main class="content-color" id="backTop">
                 <!--视频列表-->
                 <v-container >
                     <v-row>

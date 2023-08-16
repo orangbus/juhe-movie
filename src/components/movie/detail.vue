@@ -1,5 +1,5 @@
 <script setup>
-import {ref, onMounted, onActivated} from "vue"
+import {ref, onMounted, onActivated, onUnmounted} from "vue"
 import MovieList from "../layout/MovieList.vue";
 import Footer from "../layout/Footer.vue";
 import DetailHeader from "../layout/DetailHeader.vue";
@@ -42,14 +42,12 @@ const getData = () => {
             apiInfo.value = api;
             initPlayerInfo(movie.value);
 
-            setTimeout(function () {
-                list.value = res.data.list;
-            },1000)
+            list.value = res.data.list;
         }
     });
 }
 // 初始化播放信息
-const initPlayerInfo = (movieInfo)=>{
+const initPlayerInfo = (movieInfo) => {
     movie.value = movieInfo;
     // 解析地址
     movieUrlList.value = MovieUtil.transformUrl(movieInfo)
@@ -61,20 +59,20 @@ const initPlayerInfo = (movieInfo)=>{
     startPlay(movieUrls.value[0].url);
 
     // 设置下载链接
-    movieUrlList.value.forEach(item=>{
-        if (item.name.includes("m3u8")){
+    movieUrlList.value.forEach(item => {
+        if (item.name.includes("m3u8")) {
             downloadList.value = item.list;
         }
     })
     toTop();
 }
 
-const player = (item)=>{
+const player = (item) => {
     initPlayerInfo(item)
 }
 
 // 切换分类
-const changeCate = (item,index)=>{
+const changeCate = (item, index) => {
     cateIndex.value = index;
     // 切换播放列表
     movieUrls.value = movieUrlList.value[index].list;
@@ -84,24 +82,24 @@ const changeCate = (item,index)=>{
 }
 
 // 切换播放
-const changeUrl = (item,index)=>{
+const changeUrl = (item, index) => {
     urlIndex.value = index;
-    movieUrls.value.forEach(item=>{
+    movieUrls.value.forEach(item => {
         item.selected = false;
     })
     movieUrls.value[index].selected = true;
     startPlay(item.url);
 }
 
-const startPlay = (url="")=>{
-    if (url === ""){
+const startPlay = (url = "") => {
+    if (url === "") {
         snackbar.error("播放地址错误")
         return false;
     }
     // m3u8 格式的
-    if (url.includes("m3u8")){
+    if (url.includes("m3u8")) {
         playerUrl.value = preParseUrl.value + url;
-    }else{
+    } else {
         playerUrl.value = url;
     }
 }
@@ -110,62 +108,65 @@ const startPlay = (url="")=>{
 //     id.value = router.currentRoute.value.params.id;
 //     getData();
 // })
-onActivated(()=>{
+onActivated(() => {
     id.value = router.currentRoute.value.params.id;
     getData();
 })
+onUnmounted(() => {
+    list.value = [];
+})
 
 
-const backUp = ()=>{
+const backUp = () => {
     window.history.back(-1);
 }
-const collect = (item)=>{
+const collect = (item) => {
     movieCollectStore({
         id: movie.value.id,
         api_id: movie.value.api_id
-    }).then(res=>{
-        if (res.code === 200){
+    }).then(res => {
+        if (res.code === 200) {
             snackbar.success(res.msg)
-            if (movie.value.collect == null){
+            if (movie.value.collect == null) {
                 movie.value.collect = {};
-            }else{
+            } else {
                 movie.value.collect = null;
             }
-        }else{
+        } else {
             snackbar.error(res.msg)
         }
     })
 }
-const addMy = ()=>{
-        movieToday({id:movie.value.id}).then(res=>{
-            if (res.code === 200){
-                snackbar.success(res.msg);
-            }else{
-                snackbar.error(res.msg);
-            }
-        });
+const addMy = () => {
+    movieToday({id: movie.value.id}).then(res => {
+        if (res.code === 200) {
+            snackbar.success(res.msg);
+        } else {
+            snackbar.error(res.msg);
+        }
+    });
 }
 
 // 设置默认源
-const setDefault=()=>{
-    if (apiInfo.value != null){
+const setDefault = () => {
+    if (apiInfo.value != null) {
         movieStore.setMovieApi(apiInfo.value);
         snackbar.success("设置成功，可能需要刷新浏览器生效");
-    }else{
+    } else {
         snackbar.warning("当前接口已过期或者不存在");
     }
 }
-const toTop = ()=>{
+const toTop = () => {
     document.body.scrollTop = 0;
     document.getElementById("backTop").scrollTop = 0;
 }
 </script>
 
 <template>
-    <v-card class="mx-auto primary " id="backTop" color="#ccc">
+    <v-card class="mx-auto primary content-color">
         <v-layout>
             <DetailHeader></DetailHeader>
-            <v-main>
+            <v-main id="backTop">
                 <!--加载动画-->
                 <v-dialog
                     v-model="loading"
@@ -177,7 +178,7 @@ const toTop = ()=>{
                         color="primary"
                     >
                         <v-card-text>
-                           加载中，请稍后。。。
+                            加载中，请稍后。。。
                             <v-progress-linear
                                 indeterminate
                                 color="white"
@@ -199,12 +200,15 @@ const toTop = ()=>{
                                 allowfullscreen
                             ></iframe>
                         </v-col>
-                        <v-col cols="12" class="p-0" sm="12" xs="12" md="12" lg="3" >
+                        <v-col cols="12" class="p-0" sm="12" xs="12" md="12" lg="3">
                             <v-card :height="height" style="background-color: #f5f5f5">
                                 <v-card-text>
                                     <v-card-title class="px-0 text-one-line">{{ movie.vod_name }}</v-card-title>
-                                    <div class="font-weight-light">{{ movie.vod_remarks }} | {{ movie.vod_year }} |
-                                        {{ movie.vod_tag }}
+                                    <div class="font-weight-light">
+                                        <span v-show="movie.vod_remarks"> {{ movie.vod_remarks }} |</span>
+                                        <span v-show="movie.vod_year"> {{ movie.vod_year }} |</span>
+                                        <span v-show="movie.vod_tag">{{ movie.vod_tag }} | </span>
+                                        <span>{{ apiInfo.name || '' }}</span>
                                     </div>
                                     <div class="font-weight-light">{{ movie.vod_actor }}</div>
                                     <div class="font-weight-light text-five-line" v-html="movie.vod_content"></div>
@@ -214,12 +218,16 @@ const toTop = ()=>{
                                                 <v-icon
                                                     v-bind="props"
                                                     size="35"
-                                                    @click="collect()" :color="movie.collect !== null ? 'red':''">{{ movie.collect == null ? 'mdi-heart-outline':'mdi-heart'}}</v-icon>
+                                                    @click="collect()" :color="movie.collect !== null ? 'red':''">
+                                                    {{ movie.collect == null ? 'mdi-heart-outline' : 'mdi-heart' }}
+                                                </v-icon>
                                             </template>
                                         </v-tooltip>
                                         <v-tooltip text="加入追更" location="top">
                                             <template v-slot:activator="{ props }">
-                                                <v-icon size="35" class="ml-2 cursor-pointer" v-bind="props" @click="addMy">mdi-playlist-check</v-icon>
+                                                <v-icon size="35" class="ml-2 cursor-pointer" v-bind="props"
+                                                        @click="addMy">mdi-playlist-check
+                                                </v-icon>
                                             </template>
                                         </v-tooltip>
                                         <v-tooltip text="设置默认数据源" location="top">
@@ -227,16 +235,18 @@ const toTop = ()=>{
                                                 <v-icon
                                                     v-bind="props"
                                                     size="35"
-                                                    @click="setDefault()" >mdi-cog-refresh</v-icon>
+                                                    @click="setDefault()">mdi-cog-refresh
+                                                </v-icon>
                                             </template>
                                         </v-tooltip>
                                         <v-tooltip text="下载" location="top">
                                             <template v-slot:activator="{ props }">
-                                                <MovieDownload v-bind="props" :movie="movie" :downloadList="downloadList"/>
+                                                <MovieDownload v-bind="props" :movie="movie"
+                                                               :downloadList="downloadList"/>
                                             </template>
                                         </v-tooltip>
                                     </div>
-                                    <v-divider class="mt-3" />
+                                    <v-divider class="mt-3"/>
                                     <div>
                                         <div>
                                             <div class="d-flex justify-space-between align-center">
@@ -286,7 +296,8 @@ const toTop = ()=>{
 .container {
     padding: 0px;
 }
-.url{
+
+.url {
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;

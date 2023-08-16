@@ -135,12 +135,12 @@ const changeCate = (item) => {
 </script>
 
 <template>
-    <v-card class="mx-auto content-color">
+    <v-card class="mx-auto">
         <v-layout>
             <v-app>
                 <AppHeader @changeTab="changeTab" @changeApi="changeApi"></AppHeader>
                 <v-main scrollable="true">
-                    <div class="main" id="backTop" ref="container" @scroll="handleScroll">
+                    <div class="main content-color" id="backTop" ref="container" @scroll="handleScroll">
                         <v-container>
                             <!--分类-->
                             <v-row  v-if="cateList.length > 0">

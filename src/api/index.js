@@ -1,14 +1,6 @@
 import axios from "./request.js";
-
-// const app_debug = process.env.VUE_APP_DEBUG;
-
 function baseUrl(url) {
 	return "/api/" + url;
-	if (app_debug){
-		return "/api/" + url;
-	}else{
-		return "/" + url;
-	}
 }
 
 /**
@@ -53,7 +45,6 @@ export function movieDetail(id) {
 	return axios.get(baseUrl("detail/"+id));
 }
 
-
 /**
  * 网站配置
  * @returns {Promise<AxiosResponse<any>>}
@@ -73,18 +64,17 @@ export function register(data={}) {
 }
 
 /**
- * 访问统计
- */
-export function visitCount(data={}) {
-	return axios.get(baseUrl("visit"),data);
-}
-
-/**
  * 最新消息
  */
 export function noticeList(data={}) {
 	return axios.get(baseUrl("notice"),data);
 }
 
+/**
+ * 友情链接
+ */
+export function friendList(data={}) {
+	return axios.get(baseUrl("friend"),data);
+}
 
 

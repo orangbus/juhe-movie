@@ -35,14 +35,6 @@ const toPage = (path="/")=>{
         <v-spacer></v-spacer>
 
         <v-btn icon @click="toPage('/user')">
-            <v-icon>mdi-history</v-icon>
-        </v-btn>
-
-        <v-btn icon @click="toPage('/user')">
-            <v-icon>mdi-heart</v-icon>
-        </v-btn>
-
-        <v-btn icon @click="toPage('/user')">
             <v-icon>mdi-account-circle</v-icon>
         </v-btn>
     </v-app-bar>

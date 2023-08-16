@@ -122,9 +122,9 @@ const routes = [
 const router = createRouter({
 	history:createWebHistory(),
 	routes,
-	scrollBehavior(to,from,savePosition){
-		return savePosition ? savePosition : {top:0};
-	}
+	// scrollBehavior(to,from,savePosition){
+	// 	return savePosition ? savePosition : {top:0};
+	// }
 });
 
 router.beforeEach(async (to,from,next)=>{

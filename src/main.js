@@ -46,6 +46,7 @@ app.use(router)
 
 const website = useWebsiteStore()
 website.loadWebsite();
+website.loadFriendList();
 
 const movie = useMovieStore();
 const movieApiList = LocalStorage.get(EnumData.movieApiListLabel);
