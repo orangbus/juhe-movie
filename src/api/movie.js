@@ -147,3 +147,22 @@ export function movieHobbyStore(params = {}) {
 export function movieHobbyDelete(params = {}) {
 	return axios.post(baseUrl("hobby/delete"), params);
 }
+
+/**
+ * 积分
+ */
+export function scoreStore(data={}) {
+	return axios.post(baseUrl("score"),data);
+}
+export function scoreConversion(data={}) {
+	return axios.get(baseUrl("score/conversion"),data);
+}
+
+
+export function scoreList(data={}) {
+	return axios.get(baseUrl("score/list"),data);
+}
+
+export function scoreSettingInfo(data={}) {
+	return axios.get(baseUrl("score/setting"),data);
+}

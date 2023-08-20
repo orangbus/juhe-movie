@@ -5,6 +5,8 @@ import {useUserStore} from "../../store/index.js";
 import MovieToday from "../common/MovieToday.vue";
 import {ref} from "vue";
 import MyQrCode from "../common/MyQrCode.vue";
+import ScoreConversion from "../common/ScoreConversion.vue";
+import AppDownload from "../common/AppDownload.vue";
 const {user} = storeToRefs(useUserStore());
 
 const grid = ref({
@@ -15,13 +17,20 @@ const grid = ref({
     xs: 12 // 小型号到大型号的手机
 });
 
+const gridCard = ref({
+    xl: 3, // 4K 和超宽屏幕
+    lg: 3, // 桌面端
+    md: 3, // 大型号平板到手提电脑
+    sm: 4, // 小型号到中型号的平板
+    xs: 4 // 小型号到大型号的手机
+});
+
 </script>
 
 <template>
     <v-row >
         <v-col cols="12" v-bind="grid">
             <v-card>
-                <!--<img :src="user.avatar" alt="" cover>-->
                 <v-card-title>
                     <div class="d-flex justify-space-between align-center">
                         <div class="d-flex align-center">
@@ -36,7 +45,8 @@ const grid = ref({
                     </div>
                 </v-card-title>
                 <v-card-text>
-                    <div>{{ user.phone }}</div>
+                    <div>手机号：{{ user.phone }}</div>
+                    <div>积分：{{ user.score ?? 0}}</div>
                     <div class="d-flex justify-space-between align-center">
                         <div>ApiKey: {{ user.api_token}}</div>
                         <div>
@@ -50,6 +60,17 @@ const grid = ref({
                     </div>
                 </v-card-text>
             </v-card>
+        </v-col>
+
+        <v-col cols="12" v-bind="grid">
+            <v-row>
+                <v-col cols="4" v-bind="gridCard">
+                   <ScoreConversion />
+                </v-col>
+                <v-col cols="4" v-bind="gridCard">
+                   <AppDownload></AppDownload>
+                </v-col>
+            </v-row>
         </v-col>
         <MovieToday></MovieToday>
     </v-row>

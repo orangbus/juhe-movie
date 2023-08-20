@@ -6,6 +6,7 @@ const EnumData = {
 	authorizationLabel: "authorization",
 	websiteLabel: "website",
 	friendLabel: "friend",
+	scoreLabel: "score",
 
 	movieApiLabel: "movie_api",
 	movieApiListLabel:"movie_api_list",

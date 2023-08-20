@@ -4,11 +4,11 @@ import MovieList from "../layout/MovieList.vue";
 import Footer from "../layout/Footer.vue";
 import DetailHeader from "../layout/DetailHeader.vue";
 import router from "../../router/index.js";
-import {movieCollectStore, movieDetail, movieToday} from "../../api/movie.js";
+import {movieCollectStore, movieDetail, movieToday, scoreStore} from "../../api/movie.js";
 import MovieUtil from "../../utils/MovieUtil.js";
 import snackbar from "../../utils/snackbar.js";
 import {storeToRefs} from "pinia";
-import {useMovieStore} from "../../store/index.js";
+import {useMovieStore, useWebsiteStore} from "../../store/index.js";
 import MovieDownload from "../common/MovieDownload.vue";
 
 const id = ref(0);
@@ -28,6 +28,20 @@ const urlIndex = ref(0); // 播放索引
 const apiInfo = ref({});
 const movieStore = useMovieStore();
 
+const timeOutId = ref(null);
+const {scoreSetting} = storeToRefs(useWebsiteStore());
+
+const getScore = ()=>{
+    timeOutId.value = setTimeout(function () {
+        scoreStore({
+            vid:movie.value.id
+        }).then(res=>{
+            if (res.code === 200){
+                snackbar.success(res.msg);
+            }
+        });
+    },scoreSetting.time*1000)
+}
 
 const getData = () => {
     loading.value = true;
@@ -43,6 +57,8 @@ const getData = () => {
             initPlayerInfo(movie.value);
 
             list.value = res.data.list;
+
+            getScore();
         }
     });
 }
@@ -114,6 +130,9 @@ onActivated(() => {
 })
 onUnmounted(() => {
     list.value = [];
+})
+onUnmounted(()=>{
+    clearTimeout(timeOutId.value);
 })
 
 

@@ -3,7 +3,7 @@ import router from "../router/index.js";
 import LocalStorage from "../utils/LocalStorage.js";
 import EnumData from "../utils/EnumData.js";
 import {friendList, website} from "../api/index.js";
-import {movieApiList} from "../api/movie.js";
+import {movieApiList, scoreSettingInfo} from "../api/movie.js";
 import { videoApiList} from "../api/video.js";
 
 export const useUserStore = defineStore("userStore",{
@@ -11,7 +11,8 @@ export const useUserStore = defineStore("userStore",{
 		auth:false,
 		user:{
 			name: "",
-			phone: ""
+			phone: "",
+			score: 0
 		}
 	}),
 	actions:{
@@ -115,7 +116,18 @@ export const useWebsiteStore = defineStore("websiteStore", {
 				{name:'Github',url: "https://github.com/orangbus"},
 				{name:'电报交流群',url: "https://t.me/+FOho4eXM_9gXnd0y "},
 			],
+			scoreSetting :{
+				invite: 100,
+				movie: 1,
+				time: 30,
+				ratio: 10,
+			}
 		}
+	},
+	getters:{
+		// scoreSetting(){
+		// 	return this.scoreSetting;
+		// }
 	},
 	actions:{
 		getWebsite(){
@@ -152,6 +164,16 @@ export const useWebsiteStore = defineStore("websiteStore", {
 			}else{
 				this.getFriendLink();
 			}
+		},
+
+		getScoreSetting(){
+			let that = this;
+			scoreSettingInfo().then(res=>{
+				if (res.code === 200){
+					that.scoreSetting = res.data;
+					LocalStorage.set(EnumData.scoreLabel,res.data);
+				}
+			});
 		}
 	}
 })
