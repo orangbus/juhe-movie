@@ -121,6 +121,7 @@ export const useWebsiteStore = defineStore("websiteStore", {
 				movie: 1,
 				time: 30,
 				ratio: 10,
+				max_score:100
 			}
 		}
 	},
@@ -170,8 +171,12 @@ export const useWebsiteStore = defineStore("websiteStore", {
 			let that = this;
 			scoreSettingInfo().then(res=>{
 				if (res.code === 200){
-					that.scoreSetting = res.data;
-					LocalStorage.set(EnumData.scoreLabel,res.data);
+					if (res.data === null){
+						that.scoreSetting.time = 0;
+					}else{
+						that.scoreSetting = res.data;
+						LocalStorage.set(EnumData.scoreLabel,res.data);
+					}
 				}
 			});
 		}

@@ -28,12 +28,12 @@ const toTop = () => {
 </script>
 
 <template>
-    <v-card  class="mx-auto content-color user" id="backTop" >
+    <v-card  class="mx-auto content-color user">
         <v-layout>
             <!--头部导航-->
            <UserHeader @changeTab="changeTab" :tab="tab"></UserHeader>
 
-            <v-main >
+            <v-main id="backTop">
                 <v-container >
                     <!--个人中心-->
                     <UserCenter v-if="tab === 1"></UserCenter>

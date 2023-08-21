@@ -126,29 +126,28 @@ const openMenu = () => {
                         >
                             <v-sheet class="mx-auto primary px-5 py-15 rounded-lg">
                                 <div class="login">{{ is_login ? '登 录' :'注册'}}</div>
-                                <v-divider />
                                 <v-text-field
                                     v-if="!is_login"
                                     v-model="name"
                                     type="text"
                                     required
                                     label="用户名"
-                                    variant="outlined"
+                                    variant="underlined"
                                 ></v-text-field>
                                 <v-text-field
                                     v-model="phone"
-                                    type="number"
+                                    type="text"
                                     required
                                     label="手机号"
                                     maxlength="11"
-                                    variant="outlined"
+                                    variant="underlined"
                                 ></v-text-field>
                                 <v-text-field
                                     v-model="password"
                                     type="password"
                                     required
                                     label="密码"
-                                    variant="outlined"
+                                    variant="underlined"
                                 ></v-text-field>
 
                                 <v-btn

@@ -61,6 +61,7 @@ const confirm = ()=>{
                     <p>邀请一个好友，奖励 {{scoreSetting.invite }} 积分</p>
                     <p>观看{{scoreSetting.time }}秒电影，奖励 {{scoreSetting.movie }} 积分</p>
                     <p>奖励比例 {{ scoreSetting.ratio }} 积分奖励 1 天会员，立即生效</p>
+                    <p>每日最高获得积分：{{ scoreSetting.max_score == 0 ? '无限制': scoreSetting.max_score+'积分'}}</p>
                 </div>
             </v-card-text>
             <v-card-actions class="justify-end">

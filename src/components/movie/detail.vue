@@ -32,15 +32,17 @@ const timeOutId = ref(null);
 const {scoreSetting} = storeToRefs(useWebsiteStore());
 
 const getScore = ()=>{
-    timeOutId.value = setTimeout(function () {
-        scoreStore({
-            vid:movie.value.id
-        }).then(res=>{
-            if (res.code === 200){
-                snackbar.success(res.msg);
-            }
-        });
-    },scoreSetting.time*1000)
+    if (scoreSetting.value.time > 0){
+        timeOutId.value = setTimeout(function () {
+            scoreStore({
+                vid:movie.value.id
+            }).then(res=>{
+                if (res.code === 200){
+                    snackbar.success(res.msg);
+                }
+            });
+        },scoreSetting.value.time*1000)
+    }
 }
 
 const getData = () => {
