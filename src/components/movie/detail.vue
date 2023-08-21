@@ -30,7 +30,6 @@ const movieStore = useMovieStore();
 
 const timeOutId = ref(null);
 const {scoreSetting} = storeToRefs(useWebsiteStore());
-
 const getScore = ()=>{
     if (scoreSetting.value.time > 0){
         timeOutId.value = setTimeout(function () {
